@@ -1,5 +1,5 @@
 {
-  "storyId": "save-yourself-v2-alpine",
+  "storyId": "open-line-v2-alpine",
   "version": "2.0.0",
   "startNodeId": "act1_opening",
   "checkpoints": [
