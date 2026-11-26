@@ -1,6 +1,6 @@
 name: OpenLine
 options:
-  bundleIdPrefix: com.toygun
+  bundleIdPrefix: com.romitoygames
   deploymentTarget:
     iOS: "17.0"
   xcodeVersion: "16.2"
@@ -11,7 +11,7 @@ settings:
     SWIFT_VERSION: "5.0"
     MARKETING_VERSION: "0.0.1"
     CURRENT_PROJECT_VERSION: "1"
-    APP_BUNDLE_ID: com.toygun.openline
+    APP_BUNDLE_ID: com.romitoygames.openline
     ADMOB_APP_ID: ca-app-pub-3940256099942544~1458002511
     ADMOB_REWARDED_ID: ca-app-pub-3940256099942544/1712485313
     CODE_SIGN_STYLE: Automatic

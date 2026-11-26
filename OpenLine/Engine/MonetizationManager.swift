@@ -16,7 +16,7 @@ final class MonetizationManager {
 
     private let ads = RewardedAdPresenter()
 
-    init(productID: String = "com.toygun.openline.all_access") {
+    init(productID: String = "com.romitoygames.openline.all_access") {
         self.productID = productID
     }
 
