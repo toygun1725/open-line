@@ -83,6 +83,9 @@ targets:
         OTHER_LDFLAGS: "$(inherited) -ObjC"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1"
+      configs:
+        Release:
+          PROVISIONING_PROFILE_SPECIFIER: $(OPENLINE_APP_PROFILE)
 
   OpenLineWidgets:
     type: app-extension
@@ -103,6 +106,9 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID).LiveActivity
         SKIP_INSTALL: YES
         TARGETED_DEVICE_FAMILY: "1"
+      configs:
+        Release:
+          PROVISIONING_PROFILE_SPECIFIER: $(OPENLINE_WIDGET_PROFILE)
 
   OpenLineTests:
     type: bundle.unit-test

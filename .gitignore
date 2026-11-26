@@ -11,6 +11,7 @@ build/
 # Signing & Secrets
 *.p12
 *.p8
+*.csr
 *.mobileprovision
 private_keys/
 ExportOptions.plist
