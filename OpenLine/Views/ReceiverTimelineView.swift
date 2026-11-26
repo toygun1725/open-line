@@ -9,7 +9,7 @@ struct ReceiverTimelineView: View {
         let palette = engine.palette
         let visible = engine.visibleEvents
         let typing = engine.isSenderTyping
-        let lastRowID = typing ? "typing-\(visible.count)" :
+        let lastRowID: String? = typing ? "typing-\(visible.count)" :
             (engine.activeDelayEvent != nil ? "active-delay-banner" : visible.last?.id.uuidString)
         let newestMessageID = visible.last(where: {
             if case .message = $0.kind { return true }
