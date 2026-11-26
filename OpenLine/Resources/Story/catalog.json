@@ -1,0 +1,124 @@
+{
+  "appTitle": {
+    "tr": "Açık Hat",
+    "en": "Open Line"
+  },
+  "defaultStoryId": "masa_7",
+  "iapProductId": "com.saveyourself.openline.all_access",
+  "iapPriceDisplay": {
+    "tr": "$0.99 · Tek Seferlik",
+    "en": "$0.99 · One-Time"
+  },
+  "stories": [
+    {
+      "id": "masa_7",
+      "folder": "masa_7",
+      "invitation": {"tr": "Mert, lütfen bak. Simay menüye bakarken yazıyorum. Az önce garsona ne dediğimi bilmek istemezsin.", "en": "Sam, please pick up. Chloe’s reading the menu. You don’t want to know what I just said to the waiter."},
+      "synopsis": {"tr": "Atacan ilk buluşmasında arkadaşından yardım istediğini sanıyor. Numarayı yanlış çevirmiş. Şimdi masanın altında yazdığı kişi sensin.", "en": "Leo meant to text a friend during his first date. He got one digit wrong. Now you’re the person he’s texting under the table."},
+      "isFree": true,
+      "theme": "warm_rose",
+      "title": {
+        "tr": "Masa 7",
+        "en": "Table 7"
+      },
+      "subtitle": {
+        "tr": "Ücretsiz · İlk Buluşma · Atacan & Simay",
+        "en": "Free · First Date · Leo & Chloe"
+      },
+      "badge": {
+        "tr": "Masa 7",
+        "en": "Table 7"
+      },
+      "signalCode": "5G",
+      "senderName": {
+        "tr": "Atacan",
+        "en": "Leo"
+      },
+      "waitingHeadline": {
+        "tr": "Atacan yanıt bekliyor",
+        "en": "Leo is waiting for your reply"
+      },
+      "metricVar": "vibe_percent",
+      "metricLabel": {
+        "tr": "Ortam",
+        "en": "Vibe"
+      },
+      "stageLabels": [
+        { "tr": "Masa 7", "en": "Table 7" },
+        { "tr": "Yemek", "en": "Dinner" },
+        { "tr": "Pub", "en": "Pub" },
+        { "tr": "Dönüş", "en": "Drop-off" }
+      ],
+      "startSimMinutes": 735,
+      "endings": {
+        "second_date": {
+          "badge": { "tr": "YARIN KAÇTA GÖRÜŞÜYORUZ?", "en": "WHAT TIME TOMORROW?" },
+          "isNegative": false
+        },
+        "just_friends": {
+          "badge": { "tr": "ARKADAŞ OLARAK KALALIM", "en": "LET'S STAY FRIENDS" },
+          "isNegative": false
+        },
+        "dont_call": {
+          "badge": { "tr": "BİR DAHA BENİ ARAMA", "en": "DON'T CALL ME AGAIN" },
+          "isNegative": true
+        }
+      }
+    },
+    {
+      "id": "kuzey_sirti",
+      "folder": "kuzey_sirti",
+      "invitation": {"tr": "Bu mesaj birine ulaştı mı? Ben Emre. Kuzey Sırtı’ndayım. Beni okuyabiliyor musun?", "en": "Is anyone getting this? Ethan here, on North Ridge. Can you read me?"},
+      "synopsis": {"tr": "Tipiye yakalanan bir saha teknisyeninin uydu çağrısı sana düşüyor. Emre barınak ararken karda kendisine ait olmayan izler buluyor.", "en": "A field technician caught in a blizzard reaches your phone by satellite. On his way to shelter, Ethan finds tracks in the snow that aren’t his."},
+      "isFree": false,
+      "theme": "ice_blue",
+      "title": {
+        "tr": "Kuzey Sırtı",
+        "en": "North Ridge"
+      },
+      "subtitle": {
+        "tr": "2.840m Tipi · Emre & Defne",
+        "en": "2,840m Blizzard · Ethan & Clara"
+      },
+      "badge": {
+        "tr": "2.840m",
+        "en": "2,840m"
+      },
+      "signalCode": "SAT",
+      "senderName": {
+        "tr": "Emre (Uydu)",
+        "en": "Ethan (Sat)"
+      },
+      "waitingHeadline": {
+        "tr": "Emre yanıt bekliyor",
+        "en": "Ethan is waiting for your reply"
+      },
+      "metricVar": "warmth_percent",
+      "metricLabel": {
+        "tr": "Durum",
+        "en": "Status"
+      },
+      "stageLabels": [
+        { "tr": "Barınak", "en": "Shelter" },
+        { "tr": "Geçit", "en": "Pass" },
+        { "tr": "İstasyon", "en": "Station" },
+        { "tr": "Kurtarma", "en": "Rescue" }
+      ],
+      "startSimMinutes": 494,
+      "endings": {
+        "perfect_rescue": {
+          "badge": { "tr": "KUSURSUZ KURTARMA · İKİ SAĞ", "en": "PERFECT RESCUE · BOTH SAFE" },
+          "isNegative": false
+        },
+        "solo_survival": {
+          "badge": { "tr": "TEK BAŞINA DÖNÜŞ", "en": "SOLO SURVIVAL" },
+          "isNegative": false
+        },
+        "signal_lost": {
+          "badge": { "tr": "SİNYAL KAYBI", "en": "SIGNAL LOST" },
+          "isNegative": true
+        }
+      }
+    }
+  ]
+}

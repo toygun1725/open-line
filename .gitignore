@@ -1,0 +1,46 @@
+# macOS / Xcode
+*.xcodeproj
+*.xcworkspace
+DerivedData/
+build/
+*.ipa
+*.xcarchive
+*.dSYM.zip
+.DS_Store
+
+# Signing & Secrets
+*.p12
+*.p8
+*.mobileprovision
+private_keys/
+ExportOptions.plist
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Strictly excluded read-only reference APK & extracted assets
+Lifeline/
+*.apk
+
+# Local workspace, research, and generated previews
+/.agents/
+/.codex/
+/AGENTS.md
+/docs/
+/tools/
+
+# Developer credentials and machine-specific files
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+*.cer
+*.provisionprofile
+*.keychain*
+xcuserdata/
+*.xcuserstate
+.vscode/
+.idea/

@@ -1,0 +1,57 @@
+{
+  "storyId": "open-line-masa-7",
+  "version": "3.0.0",
+  "startNodeId": "act1_opening",
+  "checkpoints": [
+    {
+      "id": "start",
+      "nodeId": "act1_opening",
+      "title": {
+        "tr": "1. Masa 7 · Öğle: İlk Dakikalar",
+        "en": "1. Table 7 · Noon: First Minutes"
+      }
+    },
+    {
+      "id": "act1_dinner",
+      "nodeId": "act1_restroom_check",
+      "title": {
+        "tr": "2. Yemek · Öğleden Sonra: Uzun Masa",
+        "en": "2. Dinner · Afternoon: Long Table"
+      }
+    },
+    {
+      "id": "act2_pub",
+      "nodeId": "act2_pub_entry",
+      "title": {
+        "tr": "3. Pub · Akşam: Bir Şeyler İçmeye",
+        "en": "3. Pub · Evening: Drinks & Talk"
+      }
+    },
+    {
+      "id": "act3_dropoff",
+      "nodeId": "act3_outside_delay",
+      "title": {
+        "tr": "4. Dönüş · Gece: Evine Bırakma",
+        "en": "4. Drop-off · Night: Walk Home"
+      }
+    }
+  ],
+  "variables": {
+    "vibe_percent": { "type": "int", "default": 78, "min": 0, "max": 100 },
+    "rescue_cue": { "type": "string", "default": "none" },
+    "owned_joke": { "type": "bool", "default": false },
+    "stained_shirt": { "type": "bool", "default": false },
+    "fixed_look": { "type": "bool", "default": false },
+    "honest_wait_reason": { "type": "bool", "default": false },
+    "smooth_bill": { "type": "bool", "default": false },
+    "backed_simay": { "type": "bool", "default": false },
+    "shared_embarrassment": { "type": "bool", "default": false },
+    "used_callback": { "type": "bool", "default": false },
+    "declined_darts": { "type": "bool", "default": false },
+    "honest_open_line": { "type": "bool", "default": false },
+    "walked_home": { "type": "bool", "default": false },
+    "gave_keepsake": { "type": "bool", "default": false },
+    "warm_goodbye": { "type": "bool", "default": false },
+    "skeptic_start": { "type": "bool", "default": false }
+  }
+}

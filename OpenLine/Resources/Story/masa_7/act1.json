@@ -1,0 +1,744 @@
+{
+  "act": 1,
+  "nodes": [
+    {
+      "id": "act1_opening",
+      "act": 1,
+      "effects": [
+        { "var": "vibe_percent", "op": "set", "value": 78 }
+      ],
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "12:15 · masa 7 · gizli hat",
+            "en": "12:15 · table 7 · open line"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "MERT LÜTFEN BAK. Ben Atacan, Masa 7'den gizlice yazıyorum. Simay tam şu an menüye bakıyor.",
+            "en": "SAM PLEASE. It's Leo texting under Table 7. Chloe's reading the menu right now."
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Garson 'Suyu buzlu mu istersiniz?' dedi, heyecandan 'Yok size zahmet olmasın çok sıcak' dedim ikisi de dondu kaldı!!",
+            "en": "Waiter asked 'Sparkling or still?' and I panicked and said 'Only if you're not busy'—they BOTH froze!!"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Düğünde hattın çekmiyor diye şu yedek numarana yazdım. Ölüyorum heyecandan taktik ver!!",
+            "en": "You said your main phone had zero signal at that wedding so I texted this backup. Help me!!"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_calm_down",
+            "label": { "tr": "Yanlış numara ama sakin ol—anlat bakalım", "en": "Wrong number, buddy—breathe, what's up?" },
+            "target": "act1_panic_admit"
+          },
+          {
+            "id": "opt_wrong_num",
+            "label": { "tr": "Ben Mert değilim, yanlış numara!", "en": "I'm not Sam—you've got the wrong number!" },
+            "effects": [
+              { "var": "skeptic_start", "op": "set", "value": true }
+            ],
+            "target": "act1_skeptic_reply"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_panic_admit",
+      "act": 1,
+      "effects": [
+        { "var": "vibe_percent", "op": "add", "value": 4 }
+      ],
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "NE?! Yanlış numara mı... Kahretsin Mert'in kağıda yazdığı 6'yı 8 okumuşum. Kendi hattı da köy düğününde hiç çekmiyor şu an!",
+            "en": "WHAT?! Wrong number... Damn it, I read Sam's sloppy 6 as an 8. And his main phone's dead out at some rural wedding!"
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_explain_number" }
+    },
+    {
+      "id": "act1_skeptic_reply",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Şaka yapıyorsun... Mert'in peçeteye yazdığı 6'yı 8 okumuşum!! Kendi hattı da sinyalsiz köy düğününde.",
+            "en": "You're kidding... I read Sam's 6 on the napkin as an 8!! And he has zero service at that wedding."
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_explain_number" }
+    },
+    {
+      "id": "act1_explain_number",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Kimsin bilmiyorum ama ne olur kapatma. Simay'la iki senedir ilk defa buluştuk, şimdiden saçmaladım.",
+            "en": "No idea who you are, please don't hang up. First time ever out with Chloe and I'm already choking."
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Masada sessizlik olursa anlatırım diye kafamda iki gerçek anı hazırladım: biri üç bacaklı kedim Tarçın, diğeri çocukken vapurda uyuyakaldığım gün. Hangisini cebimde tutayım?",
+            "en": "Brought two real stories just in case it gets quiet: one about my three-legged cat Cookie, one about falling asleep on a ferry as a kid. Which one should I keep handy?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "memory_anchor",
+        "options": [
+          {
+            "id": "opt_cue_cat",
+            "label": { "tr": "Üç bacaklı kedi hikayesini tut", "en": "Keep the three-legged cat story" },
+            "effects": [
+              { "var": "rescue_cue", "op": "set", "value": "cat" }
+            ],
+            "target": "act1_cue_cat"
+          },
+          {
+            "id": "opt_cue_ferry",
+            "label": { "tr": "Vapurda uyuyakalma anısını tut", "en": "Keep the childhood ferry story" },
+            "effects": [
+              { "var": "rescue_cue", "op": "set", "value": "ferry" }
+            ],
+            "target": "act1_cue_ferry"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_cue_cat",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Tamamdır, kediyi aklıma yazdım.",
+            "en": "Got it—locking in the cat story."
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_menu_wait" }
+    },
+    {
+      "id": "act1_cue_ferry",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Tamamdır, vapur anısı cepte.",
+            "en": "Cool—ferry story locked in."
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_menu_wait" }
+    },
+    {
+      "id": "act1_menu_wait",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Simay başını kaldırdı, telefonu dizime koyuyorum. Birazdan yazarım!",
+            "en": "Chloe's looking up, dropping phone to my lap. Text you in a bit!"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 240,
+        "target": "act1_bread_spill",
+        "liveActivity": {
+          "phase": "open_smile",
+          "currentStage": 1,
+          "totalStages": 4,
+          "stages": [
+            { "tr": "Masa 7", "en": "Table 7" },
+            { "tr": "Yemek", "en": "Dinner" },
+            { "tr": "Pub", "en": "Pub" },
+            { "tr": "Dönüş", "en": "Drop-off" }
+          ],
+          "shortTitle": { "tr": "Menü seçiyorlar", "en": "Checking menu" },
+          "statusBody": {
+            "tr": "Atacan garsondan sonra toparlıyor",
+            "en": "Leo recovering from waiter slip"
+          },
+          "icon": "sparkles"
+        }
+      }
+    },
+    {
+      "id": "act1_bread_spill",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Simay çalan iş telefonunu sessize alıyor, hemen yazdım. Az önceki saçmalığıma yarı gülüp yarı garipsedi. Ne diyeyim?",
+            "en": "Chloe's silencing a work call, quick. She half-smiled at that water joke, half-squinted. What do I say?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_own_joke",
+            "label": { "tr": "Dürüst ol: 'Heyecandan cümlem karıştı' de", "en": "Own it: 'Sorry, just nervous around you'" },
+            "effects": [
+              { "var": "owned_joke", "op": "set", "value": true },
+              { "var": "vibe_percent", "op": "add", "value": 5 }
+            ],
+            "target": "act1_own_joke"
+          },
+          {
+            "id": "opt_blame_candle",
+            "label": { "tr": "Hiç olmamış gibi menüye geç", "en": "Ignore it and pivot straight to food" },
+            "effects": [
+              { "var": "vibe_percent", "op": "add", "value": -8 }
+            ],
+            "target": "act1_blame_candle"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_own_joke",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Oh be güldü! 'Ben de biraz gerginim aslında' dedi, rahatladım.",
+            "en": "Whew, she laughed! Said 'Honestly I'm a little nervous too'—much better."
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_order_choice" }
+    },
+    {
+      "id": "act1_blame_candle",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Konuyu değiştirince garip bir sessizlik oldu ama menüye döndük.",
+            "en": "Switching subjects left a tiny weird pause, though we moved onto food."
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_order_choice" }
+    },
+    {
+      "id": "act1_order_choice",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Sipariş vereceğiz. Üstümde bembeyaz gömlek var bu arada. Ortaya paylaşmalık mezeler mi söyleyelim yoksa cızırdayan soslu tava mı?",
+            "en": "Ordering now. Note: I'm wearing a crisp white shirt. Share safe small plates in the middle or get the sizzling butter skillet?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_share_meze",
+            "label": { "tr": "Paylaşmalık mezelerle devam et", "en": "Go with shared small plates" },
+            "effects": [
+              { "var": "vibe_percent", "op": "add", "value": 4 }
+            ],
+            "target": "act1_share_meze"
+          },
+          {
+            "id": "opt_sizzling_pan",
+            "label": { "tr": "Cızırdayan soslu tava söyle", "en": "Order the sizzling butter skillet" },
+            "effects": [
+              { "var": "stained_shirt", "op": "set", "value": true },
+              { "var": "vibe_percent", "op": "add", "value": -10 }
+            ],
+            "target": "act1_sizzling_pan"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_share_meze",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Süper, ortak tabaklar seçtik. Muhabbet açılıyor gibi, bir süre yazamayacağım yarım saat bir saate dürterim.",
+            "en": "Nice, we picked shared plates. Going off my phone while we eat—catch you in an hour or so."
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_starters_delay" }
+    },
+    {
+      "id": "act1_sizzling_pan",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "glitchLevel": 2,
+          "haptic": "warning",
+          "text": {
+            "tr": "YA HAYIR!! Tava masaya inerken cızırdayan yağ tam gömleğime sıçradı! Simay gülmemek için dudak ısırıyor.",
+            "en": "NO WAY!! Skillet popped as it landed and splashed butter straight onto my white collar!! Chloe's holding back a laugh."
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Şu an elimi telefona süremem, bir ara lavaboya kaçınca yazarım!",
+            "en": "Can't touch my phone right now—I'll text when I sneak to the restroom!"
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_starters_delay" }
+    },
+    {
+      "id": "act1_starters_delay",
+      "act": 1,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "masa 7 · başlangıçlar & ilk sohbet",
+            "en": "table 7 · starters & conversation"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 2400,
+        "target": "act1_restroom_check",
+        "liveActivity": {
+          "phase": "lunch_starters",
+          "currentStage": 2,
+          "totalStages": 4,
+          "stages": [
+            { "tr": "Masa 7", "en": "Table 7" },
+            { "tr": "Yemek", "en": "Dinner" },
+            { "tr": "Pub", "en": "Pub" },
+            { "tr": "Dönüş", "en": "Drop-off" }
+          ],
+          "shortTitle": { "tr": "Uzun yemek sohbeti", "en": "Lunch & chatter" },
+          "statusBody": {
+            "tr": "Atacan ile Simay yemekteler",
+            "en": "Leo & Chloe sharing plates"
+          },
+          "icon": "fork.knife"
+        }
+      }
+    },
+    {
+      "id": "act1_restroom_check",
+      "act": 1,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "öğleden sonra · bistro lavabosu",
+            "en": "afternoon · restroom check"
+          }
+        },
+        {
+          "type": "conditional",
+          "condition": { "var": "stained_shirt", "op": "eq", "value": true },
+          "thenItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Lavaboya kaçtım! Gömlekteki o sarı tereyağı lekesi duruyor. Soğuk suyla silip umursamayayım mı, yoksa el sabunuyla bayağı ovalayıp çıkarayım mı?",
+                "en": "Snuck into the restroom! Yellow butter stain is still obvious. Lightly dab with cold water and forget it, or scrub hard with hand soap?"
+              }
+            }
+          ],
+          "elseItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Lavaboya geldim! Ekmek yerken yakama ufak bir zeytinyağı damlamış. Az soğuk suyla silip geçeyim mi, yoksa el sabunuyla iyice ovalayayım mı?",
+                "en": "Quick restroom stop! Dropped a tiny olive-oil dot on my collar dipping bread. Just dab with cold water, or scrub it out with soap?"
+              }
+            }
+          ]
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_splash_remedy",
+            "label": { "tr": "Soğuk suyla sil geç, kafana takma", "en": "Dab lightly with cold water & relax" },
+            "effects": [
+              { "var": "fixed_look", "op": "set", "value": true },
+              { "var": "vibe_percent", "op": "add", "value": 4 }
+            ],
+            "target": "act1_splash_remedy"
+          },
+          {
+            "id": "opt_soap_scrub",
+            "label": { "tr": "Sabunla köpürt, üst düğmeyi ilikle", "en": "Scrub with soap & button collar" },
+            "effects": [
+              { "var": "vibe_percent", "op": "add", "value": -6 }
+            ],
+            "target": "act1_soap_scrub"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_splash_remedy",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "İyi fikir, su iz bırakmadan büyük kısmını aldı. Şimdi dönüyorum, birazdan yazarım.",
+            "en": "Smart, cold water lifted most of it without leaving a giant wet ring. Heading back—talk in a bit."
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_return_table" }
+    },
+    {
+      "id": "act1_soap_scrub",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Sabunla ovunca gömlekte koca bir ıslak halka kaldı yaa. Üst düğmeyi de ilikledim garip duruyorum ama dönüyorum mecbur.",
+            "en": "Soap left a huge wet dinner-plate circle on my chest, and buttoning the collar feels stiff. Walking back..."
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_return_table" }
+    },
+    {
+      "id": "act1_return_table",
+      "act": 1,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "masaya dönüş",
+            "en": "returning to table 7"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 300,
+        "target": "act1_long_lunch_talk",
+        "liveActivity": {
+          "phase": "back_to_lunch",
+          "currentStage": 2,
+          "totalStages": 4,
+          "stages": [
+            { "tr": "Masa 7", "en": "Table 7" },
+            { "tr": "Yemek", "en": "Dinner" },
+            { "tr": "Pub", "en": "Pub" },
+            { "tr": "Dönüş", "en": "Drop-off" }
+          ],
+          "shortTitle": { "tr": "Masaya döndü", "en": "Back at Table 7" },
+          "statusBody": {
+            "tr": "Atacan masada sohbete devam ediyor",
+            "en": "Leo back at Table 7"
+          },
+          "icon": "fork.knife"
+        }
+      }
+    },
+    {
+      "id": "act1_long_lunch_talk",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Masaya oturur oturmaz Simay telefonuna gelen mesaja bakarken sordu: 'Bu arada iki yıldır aynı çevredeyiz, niye bugüne kadar hiç kahve içelim demedin?'",
+            "en": "Right as I sat back down, Chloe asked: 'Wait—we've been in the same circle two years, why did it take you so long to ask me out?'"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Çok açık soruyor. Doğrudan 'Çekindim, seni hep çok havalı buluyordum' diye açılıp söyleyeyim mi, yoksa 'İşler çok yoğundu denk gelemedik' diye güvenli mi kapatayım?",
+            "en": "Super direct question. Tell her straight 'I was intimidated—always thought you were out of my league,' or keep it casual with 'Just super busy with studio deadlines'?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_honest_wait",
+            "label": { "tr": "Doğruyu söyle: 'Senden çok çekiniyordum'", "en": "Be honest: 'Honestly I was intimidated'" },
+            "effects": [
+              { "var": "honest_wait_reason", "op": "set", "value": true },
+              { "var": "vibe_percent", "op": "add", "value": 6 }
+            ],
+            "target": "act1_honest_wait"
+          },
+          {
+            "id": "opt_play_busy",
+            "label": { "tr": "Geçiş yap: 'İşler çok yoğundu denk gelmedi'", "en": "Play it safe: 'Just busy with work'" },
+            "effects": [
+              { "var": "vibe_percent", "op": "add", "value": -6 }
+            ],
+            "target": "act1_play_busy"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_honest_wait",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Gözlerinin içi güldü resmen! 'Bunu duymak çok tatlıymış' dedi. Ortam efsane iyi, ana yemek ve tatlı uzayacak gibi. Yarım saat bir saate yazarım!",
+            "en": "Her eyes lit right up! 'Okay, that's actually really sweet.' Vibe is amazing—looks like lunch is running way into the afternoon. Catch you in an hour!"
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_mains_delay" }
+    },
+    {
+      "id": "act1_play_busy",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "'Yoğundu' deyince pek etkilenmedi ama sohbete devam ediyoruz. Ana yemekler geliyor, bir süre yazamayabilirim.",
+            "en": "'Busy' didn't earn many points, though we kept chatting. Mains are out—off my phone for a good stretch."
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_mains_delay" }
+    },
+    {
+      "id": "act1_mains_delay",
+      "act": 1,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "uzun yemek & tatlı · masa 7",
+            "en": "long afternoon meal · table 7"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 7200,
+        "target": "act1_bill_moment",
+        "liveActivity": {
+          "phase": "long_dinner",
+          "currentStage": 2,
+          "totalStages": 4,
+          "stages": [
+            { "tr": "Masa 7", "en": "Table 7" },
+            { "tr": "Yemek", "en": "Dinner" },
+            { "tr": "Pub", "en": "Pub" },
+            { "tr": "Dönüş", "en": "Drop-off" }
+          ],
+          "shortTitle": { "tr": "Yemek & kahve uzadı", "en": "Long meal & coffee" },
+          "statusBody": {
+            "tr": "Atacan ile Simay hâlâ Masa 7'de sohbetteler",
+            "en": "Leo & Chloe talking for hours at Table 7"
+          },
+          "icon": "fork.knife"
+        }
+      }
+    },
+    {
+      "id": "act1_bill_moment",
+      "act": 1,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "öğleden sonra sonu · hesap",
+            "en": "late afternoon · the check"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Saatlerdir buradayız, kalkmak istemediğimiz belli! Akşam üstü bir şeyler içmeye pub'a geçelim diye konuştuk.",
+            "en": "Hours just flew by—neither of us wants to leave! We talked about walking over to a pub for evening drinks."
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Şu an hesap geldi ve Simay cüzdanını çıkardı. 'Yemek benden, pub'da ilk içkiler senden' diyeyim mi yoksa tek başıma mı ödeyeyim?",
+            "en": "Check landed and Chloe pulled out her wallet. Say 'Meal's on me, first round at the pub's on you' or insist on covering the whole thing?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_split_smooth",
+            "label": { "tr": "'Yemek benden, pub'da ilk tur senden'", "en": "'Food's on me, first pub round is yours'" },
+            "effects": [
+              { "var": "smooth_bill", "op": "set", "value": true },
+              { "var": "vibe_percent", "op": "add", "value": 4 }
+            ],
+            "target": "act1_split_smooth"
+          },
+          {
+            "id": "opt_fight_bill",
+            "label": { "tr": "Olmaz de, hesabı tek başına kapat", "en": "Refuse and pay the whole tab alone" },
+            "effects": [
+              { "var": "vibe_percent", "op": "add", "value": -8 }
+            ],
+            "target": "act1_fight_bill"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_split_smooth",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "'Anlaştık, güzel pazarlık' dedi ve güldü! Kalkıyoruz, sokakları geze geze pub'a yürüyeceğiz. Orada oturunca yazarım.",
+            "en": "'Deal, fair trade,' she smiled! Heading out—strolling toward the pub street. Text you once we get there."
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_walk_to_pub_delay" }
+    },
+    {
+      "id": "act1_fight_bill",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Biraz katı konuştum sanki, 'Peki sen bilirsin' deyip çantasını kapattı. Neyse pub tarafına yürüyoruz, akşam oturunca haber veririm.",
+            "en": "Came on a bit stiff; she zipped her bag with an 'Okay then...' Still walking toward the pub area, catch you later."
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act1_walk_to_pub_delay" }
+    },
+    {
+      "id": "act1_walk_to_pub_delay",
+      "act": 1,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "sahil & pub sokağına yürüyüş",
+            "en": "walking toward the pub district"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 3600,
+        "target": "act1_pub_door_spot",
+        "liveActivity": {
+          "phase": "stroll_to_pub",
+          "currentStage": 3,
+          "totalStages": 4,
+          "stages": [
+            { "tr": "Masa 7", "en": "Table 7" },
+            { "tr": "Yemek", "en": "Dinner" },
+            { "tr": "Pub", "en": "Pub" },
+            { "tr": "Dönüş", "en": "Drop-off" }
+          ],
+          "shortTitle": { "tr": "Pub'a geçiyorlar", "en": "Heading to a pub" },
+          "statusBody": {
+            "tr": "Atacan ile Simay pub'a doğru yürüyor",
+            "en": "Leo & Chloe strolling to the pub"
+          },
+          "icon": "figure.walk"
+        }
+      }
+    },
+    {
+      "id": "act1_pub_door_spot",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "haptic": "warning",
+          "text": {
+            "tr": "Pub'ın kapısından tam giriyoruz, bir baktım... Barda oturan kişi Simay'ın eski ajansından kendini beğenmiş Bora!! Daha bizi görmedi ama kesin yanımıza damlayacak.",
+            "en": "Stepping into the pub and... NO WAY. Sitting at the bar is Julian—that arrogant guy from Chloe's old agency!! He hasn't spotted us yet, though no shot he ignores us."
+          }
+        }
+      ],
+      "transition": {
+        "type": "actBreak",
+        "completedAct": 1,
+        "nextAct": 2,
+        "title": {
+          "tr": "1. Perde Sonu · Pub Akşamı Başlıyor",
+          "en": "Act 1 Complete · Pub Evening Begins"
+        },
+        "subtitle": {
+          "tr": "Barda Simay'ın eski ajansından Bora var! Akşama pub'da devam etmek için 1 reklam izle veya $0.99 ile reklamsız geç.",
+          "en": "Julian from Chloe's old agency is at the bar! Watch 1 short ad for Act 2 at the pub, or go ad-free for $0.99."
+        },
+        "target": "act2_pub_entry"
+      }
+    }
+  ]
+}

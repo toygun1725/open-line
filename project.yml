@@ -1,0 +1,119 @@
+name: OpenLine
+options:
+  bundleIdPrefix: com.saveyourself
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.2"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "0.0.1"
+    CURRENT_PROJECT_VERSION: "1"
+    APP_BUNDLE_ID: com.saveyourself.game
+    ADMOB_APP_ID: ca-app-pub-3940256099942544~1458002511
+    ADMOB_REWARDED_ID: ca-app-pub-3940256099942544/1712485313
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+
+packages:
+  GoogleMobileAds:
+    url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
+    exactVersion: 12.14.0
+
+schemes:
+  OpenLine:
+    build:
+      targets:
+        OpenLine: all
+    test:
+      targets:
+        - OpenLineTests
+
+targets:
+  OpenLine:
+    type: application
+    platform: iOS
+    sources:
+      - path: OpenLine
+        excludes:
+          - "Resources/**"
+      - path: OpenLine/Resources/Assets.xcassets
+      - path: OpenLine/Resources/Localization
+        buildPhase: resources
+      - path: OpenLine/Resources/Fonts
+        buildPhase: resources
+      - path: OpenLine/Resources/Sounds
+        buildPhase: resources
+      - path: OpenLine/Resources/Story
+        type: folder
+        buildPhase: resources
+      - path: Shared
+    dependencies:
+      - package: GoogleMobileAds
+        product: GoogleMobileAds
+      - target: OpenLineWidgets
+    info:
+      path: OpenLine/Info.plist
+      properties:
+        CFBundleDisplayName: Açık Hat
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSSupportsLiveActivities: true
+        GADApplicationIdentifier: $(ADMOB_APP_ID)
+        OpenLineRewardedAdID: $(ADMOB_REWARDED_ID)
+        SKAdNetworkItems:
+          - SKAdNetworkIdentifier: cstr6suwn9.skadnetwork
+        CFBundleURLTypes:
+          - CFBundleURLSchemes: [openline]
+        ITSAppUsesNonExemptEncryption: false
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIAppFonts:
+          - IBMPlexSerif-Regular.ttf
+          - IBMPlexSerif-Medium.ttf
+          - SpaceGrotesk-Variable.ttf
+          - CourierPrime-Regular.ttf
+          - CourierPrime-Bold.ttf
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID)
+        OTHER_LDFLAGS: "$(inherited) -ObjC"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1"
+
+  OpenLineWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: OpenLineWidgets
+      - path: Shared
+    info:
+      path: OpenLineWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Açık Hat Live
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID).LiveActivity
+        SKIP_INSTALL: YES
+        TARGETED_DEVICE_FAMILY: "1"
+
+  OpenLineTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: OpenLineTests
+    dependencies:
+      - target: OpenLine
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID).Tests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/OpenLine.app/OpenLine"
+        BUNDLE_LOADER: "$(TEST_HOST)"

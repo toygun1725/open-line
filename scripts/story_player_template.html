@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="tr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#13181d"><title>Açık Hat · Open Line</title>
+<style>
+* {
+  box-sizing: border-box;
+}
+:root {
+  font:
+    16px/1.45 -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  color: #f7f4ed;
+  background: #12161a;
+  color-scheme: dark;
+}
+body {
+  margin: 0;
+  min-height: 100svh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  background: radial-gradient(ellipse at 50% 42%, #30343a, #13171b 66%);
+}
+button,
+select {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+button {
+  border: 0;
+  background: none;
+}
+button:focus-visible,
+summary:focus-visible,
+select:focus-visible {
+  outline: 3px solid #e8aa6a;
+  outline-offset: 2px;
+}
+button:disabled {
+  cursor: default;
+}
+.phone {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  width: min(392px, 100vw);
+  height: min(790px, calc(100svh - 102px));
+  min-height: 470px;
+  overflow: hidden;
+  border: 5px solid #414347;
+  border-radius: 49px;
+  background: #172129;
+  box-shadow:
+    0 0 0 2px #0c0d0e,
+    0 16px 52px #08090ac2;
+}
+.phone:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(0deg, #070c13b8, transparent 78%),
+    url(data:image/jpeg;base64,__NIGHT_CITY__) center/cover;
+}
+.phone:after {
+  content: "";
+  height: 4px;
+  width: 100px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.64;
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.screen {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  overflow: auto;
+}
+.island {
+  width: 76px;
+  height: 20px;
+  background: #090b0d;
+  border-radius: 18px;
+  align-self: center;
+  flex: none;
+  margin: 10px auto 2px;
+}
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  min-height: 44px;
+}
+.wordmark {
+  font:
+    600 15px Georgia,
+    serif;
+  letter-spacing: 0.015em;
+}
+.gear {
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+  color: inherit;
+}
+.clockarea {
+  text-align: center;
+  padding: 12px 0 30px;
+  text-shadow: 0 2px 20px #0008;
+}
+.date {
+  font-size: 14px;
+  color: #eee9df;
+}
+.clock {
+  font-size: clamp(62px, 10vh, 87px);
+  line-height: 1.04;
+  font-weight: 300;
+  letter-spacing: -0.075em;
+  font-variant-numeric: tabular-nums;
+}
+.inbox {
+  margin: auto 14px 24px;
+  display: grid;
+  gap: 8px;
+}
+.card {
+  border: 1px solid #ffffff30;
+  border-radius: 18px;
+  background: rgba(21, 28, 35, 0.84);
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+}
+.row {
+  width: 100%;
+  min-height: 76px;
+  display: flex;
+  align-items: flex-start;
+  text-align: left;
+  gap: 10px;
+  padding: 13px 14px;
+}
+.avatar {
+  flex: none;
+  width: 37px;
+  height: 37px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: #734b46;
+  color: #ffe6d9;
+  font:
+    italic 23px Georgia,
+    serif;
+}
+.ice .avatar {
+  background: #3b5766;
+  color: #daeef8;
+}
+.msg {
+  flex: 1;
+  min-width: 0;
+}
+.by {
+  font-size: 15px;
+  font-weight: 650;
+}
+.storytitle {
+  color: #c7cbd1;
+  font-size: 12px;
+  font-weight: 500;
+}
+.snippet {
+  color: #ebe9e4;
+  margin-top: 3px;
+  font-size: 13px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.row[aria-expanded="true"] .snippet {
+  -webkit-line-clamp: unset;
+}
+.detail {
+  border-top: 1px solid #ffffff24;
+  margin: 0 15px;
+  padding: 11px 0 14px;
+}
+.detail p {
+  margin: 0 0 12px;
+  font-size: 14px;
+}
+.action,
+.alt {
+  padding: 10px 14px;
+  min-height: 44px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+.action {
+  background: #efd6c3;
+  color: #291e1a;
+}
+.alt {
+  color: inherit;
+  border: 1px solid currentColor;
+}
+.detail .action,
+.panel .action {
+  width: 100%;
+}
+.ice .detail .action {
+  background: #d2e2ed;
+}
+.chat {
+  background: #f6efeb;
+  color: #39222b;
+  color-scheme: light;
+}
+.chat.icechat {
+  background: #edf2f5;
+  color: #1d3547;
+}
+.chat .island {
+  background: #1e2227;
+}
+.chathead {
+  border-bottom: 1px solid #0002;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  min-height: 54px;
+}
+.chathead button {
+  min-height: 44px;
+}
+.chathead b {
+  margin-left: auto;
+}
+.feed {
+  flex: 1;
+  overflow: auto;
+  padding: 12px 15px 28px;
+}
+.bubble,
+.panel {
+  background: #fff9;
+  border: 1px solid #2222;
+  border-radius: 14px;
+  padding: 12px;
+  margin: 7px 0;
+}
+.bubble {
+  font-family: Georgia, serif;
+  font-size: 16px;
+}
+.tele {
+  font:
+    11px/1.5 ui-monospace,
+    monospace;
+  opacity: 0.73;
+  padding: 8px 1px;
+}
+.choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 10px 0;
+}
+.choices button {
+  border: 1px solid #7c6d7055;
+  border-radius: 8px;
+  padding: 10px 12px;
+  min-height: 48px;
+  font: 500 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overflow-wrap: anywhere;
+  background: #fffc;
+  text-align: left;
+}
+.typing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin: 8px 0;
+  padding: 7px 11px;
+  border-radius: 14px;
+  background: #f9f3ef;
+  color: #51444a;
+  font: 500 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.icechat .typing { background: #edf4f8; color: #384f61; }
+.typing-dots { display: flex; gap: 3px; }
+.typing-dots i { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+@media (prefers-reduced-motion: no-preference) {
+  .typing-dots i { animation: openline-dot 1.2s ease-in-out infinite; }
+  .typing-dots i:nth-child(2) { animation-delay: 0.14s; }
+  .typing-dots i:nth-child(3) { animation-delay: 0.28s; }
+  .bubble.arriving { animation: openline-arrival 220ms ease-out; }
+  .choices button:enabled:active { transform: translateY(2px); }
+}
+@keyframes openline-dot {
+  0%, 60%, 100% { opacity: .45; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-2px); }
+}
+@keyframes openline-arrival {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.choices .selected {
+  background: #693d48;
+  color: white;
+}
+.choices button:disabled:not(.selected) {
+  opacity: 0.52;
+}
+.panel p {
+  font-size: 14px;
+}
+.panel .alt {
+  margin-top: 8px;
+  width: 100%;
+}
+.overlay {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: #06090d9c;
+  display: flex;
+  align-items: flex-end;
+}
+.sheet {
+  width: 100%;
+  border-radius: 24px 24px 0 0;
+  padding: 22px 20px 32px;
+  background: #232b32;
+  color: white;
+  display: grid;
+  gap: 11px;
+}
+.sheet h2,
+.sheet p,
+.panel h3 {
+  margin: 0;
+}
+.sheet p {
+  color: #d3d5d6;
+}
+.sheet select {
+  padding: 9px;
+  border-radius: 8px;
+}
+.sheet label {
+  display: grid;
+  gap: 4px;
+}
+.tools {
+  width: min(370px, 95vw);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  color: #b8bdc5;
+  font-size: 12px;
+}
+.tools select {
+  background: #22292e;
+  border: 1px solid #46515a;
+  border-radius: 7px;
+  padding: 6px;
+  max-width: 73%;
+}
+.notice {
+  font-size: 12px;
+}
+.mono .bubble {
+  font-family: monospace;
+}
+.sans .bubble {
+  font-family: inherit;
+}
+.sysbtn {
+  width: 100%;
+  display: grid;
+  text-align: left;
+  gap: 4px;
+  padding: 10px 14px;
+  font-size: 13px;
+}
+.stages {
+  display: flex;
+  gap: 4px;
+}
+.stages span {
+  flex: 1;
+  border-top: 3px solid #686d72;
+  padding-top: 4px;
+  font-size: 10px;
+}
+.stages span.filled {
+  border-color: #f1c2a3;
+}
+@media (max-width: 520px) {
+  body {
+    gap: 4px;
+    background: #14191c;
+  }
+  .phone {
+    width: 100vw;
+    height: calc(100svh - 42px);
+    border: 0;
+    border-radius: 0;
+    min-height: 320px;
+  }
+  .tools {
+    height: 38px;
+  }
+  .island {
+    margin-top: 8px;
+  }
+}
+@media (max-height: 630px) {
+  .clockarea {
+    padding: 4px 0 12px;
+  }
+  .clock {
+    font-size: 54px;
+  }
+  .phone {
+    min-height: 300px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+  }
+}
+</style></head>
+<body><main class="phone" id="phone" aria-label="Açık Hat"><div class="island" aria-hidden="true"></div><div class="screen" id="screen"></div><div id="modal"></div></main>
+<div class="tools"><label for="scenes" id="sceneLabel"></label><select id="scenes"></select></div>
+<script>
+"use strict";
+const BUNDLE=/*__STORY_BUNDLE_JSON__*/null;
+const CLICK=/*__CLICK_B64__*/"";
+const SWITCH=/*__SWITCH_B64__*/"";
+/*__PREVIEW_STORY__*/
+/*__PREVIEW_UI__*/
+</script></body></html>

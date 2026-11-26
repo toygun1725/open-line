@@ -1,0 +1,788 @@
+{
+  "act": 2,
+  "nodes": [
+    {
+      "id": "act2_pub_entry",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "warning",
+          "text": {
+            "tr": "akşam · pub · bora masaya geldi",
+            "en": "evening · pub · Julian walked over"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Tahmin ettiğim gibi Bora bizi gördüğü an elinde içkiyle yanımıza geldi. Az önce Simay'ın yeni kurduğu bağımsız tasarım atölyesine 'hobi projesi' deyip güldü!",
+            "en": "Called it—Julian walked straight to our booth with his drink. Just laughed and called Chloe's independent design studio a 'weekend hobby project'!"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Simay parmağıyla masaya iki kere vurdu. Bunu tanıyorum. Araya mı gireyim, yoksa sözü ona mı bırakayım?",
+            "en": "Chloe tapped the table twice. I know that look. Should I step in or give her the floor?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_back_simay",
+            "label": {
+              "tr": "Kazandığı projeyi hatırlat",
+              "en": "Mention the project she won"
+            },
+            "effects": [
+              {
+                "var": "backed_simay",
+                "op": "set",
+                "value": true
+              },
+              {
+                "var": "vibe_percent",
+                "op": "add",
+                "value": 6
+              }
+            ],
+            "target": "act2_back_simay"
+          },
+          {
+            "id": "opt_quiet_nod",
+            "label": {
+              "tr": "‘Sen anlatmak ister misin?’ diye sor",
+              "en": "Ask if she wants to tell him herself"
+            },
+            "effects": [
+              {
+                "var": "vibe_percent",
+                "op": "add",
+                "value": 5
+              }
+            ],
+            "target": "act2_quiet_nod"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act2_back_simay",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "'Asıl sizin ajansın alamadığı belediye restorasyonunu Simay tek başına kaptı, zaten biz de baş başayız' dedim—Bora kıpkırmızı olup bara döndü!!",
+            "en": "'Wait, didn't Chloe win the heritage bid your whole agency lost? Anyway, we're in the middle of catching up'—he turned red and marched back to the bar!!"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Simay masanın üstünden koluma dokundu: 'Çok hoştu yaptığın.' İlk içkiler geldi, şimdi bayağı sohbete dalacağız. Yarım saat bir saate yazarım!",
+            "en": "Chloe tapped my arm smiling: 'Thanks for that.' First round just landed—talk in an hour or so!"
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act2_first_round_delay" }
+    },
+    {
+      "id": "act2_quiet_nod",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "'Sen anlatmak ister misin?' dedim. Simay bardağını bıraktı. 'Hobi dediğin işin açılışına pazartesi beklerim Bora.' Adamın yüzünü görmen lazımdı.",
+            "en": "I asked if she wanted to tell him. Chloe put down her glass. ‘Come to the opening on Monday, Julian. You can see my hobby for yourself.’ His face."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act2_first_round_delay"
+      }
+    },
+    {
+      "id": "act2_first_round_delay",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "pub · ilk içkiler & sohbet",
+            "en": "pub · drinks & getting to know each other"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 2100,
+        "target": "act2_truth_drinks",
+        "liveActivity": {
+          "phase": "pub_drinks_one",
+          "currentStage": 3,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Masa 7",
+              "en": "Table 7"
+            },
+            {
+              "tr": "Yemek",
+              "en": "Dinner"
+            },
+            {
+              "tr": "Pub",
+              "en": "Pub"
+            },
+            {
+              "tr": "Dönüş",
+              "en": "Drop-off"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Pub'da sohbet",
+            "en": "Drinks at the pub"
+          },
+          "statusBody": {
+            "tr": "Atacan ile Simay pub'da sohbetteler",
+            "en": "Leo & Chloe talking over drinks"
+          },
+          "icon": "cup.and.saucer.fill"
+        }
+      }
+    },
+    {
+      "id": "act2_truth_drinks",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Birer bira içince bayağı açıldık. Simay 'İşten güçten hiç batırdığın komik bir anını anlatmadın, var mı öyle bir facia?' dedi.",
+            "en": "Loosened up over drinks. Chloe asked 'Okay, what's a funny work disaster you totally bombed? Don't tell me you don't have one.'"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Maketleri yağmurda çamura düşürdüğüm günü anlatabilirim. Ya da çantada o yamuk maketin fotoğrafı var. Göstersem mi?",
+            "en": "I could tell her about dropping my models in the mud. Or I’ve got a photo of the crooked one. Should I show her?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_admit_flop",
+            "label": {
+              "tr": "Çamurlu rezil günü dürüstçe anlat",
+              "en": "Tell the embarrassing mud puddle story"
+            },
+            "effects": [
+              {
+                "var": "shared_embarrassment",
+                "op": "set",
+                "value": true
+              },
+              {
+                "var": "vibe_percent",
+                "op": "add",
+                "value": 6
+              }
+            ],
+            "target": "act2_admit_flop"
+          },
+          {
+            "id": "opt_brag_safe",
+            "label": {
+              "tr": "Yamuk maketin fotoğrafını göster",
+              "en": "Show her the crooked model"
+            },
+            "effects": [
+              {
+                "var": "vibe_percent",
+                "op": "add",
+                "value": 4
+              }
+            ],
+            "target": "act2_brag_safe"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act2_admit_flop",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Gözlerinden yaş gelene kadar güldü ya!! 'Kendinle dalga geçebilmen çok iyi' dedi. İkinci tura geçiyoruz, yarım saat bir saate yazarım.",
+            "en": "She laughed till she teared up!! 'Okay, I love that you don't take yourself too seriously.' Ordering round two—text later!"
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act2_second_round_delay" }
+    },
+    {
+      "id": "act2_brag_safe",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Fotoğrafı iki parmağıyla büyüttü. 'Şu eğri çatıyı sakın düzeltme.' Sonra kendi ilk maketini açtı. Onunki de yamukmuş.",
+            "en": "She zoomed in. ‘Don’t you dare fix that crooked roof.’ Then she pulled up her first model. Hers leans too."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act2_second_round_delay"
+      }
+    },
+    {
+      "id": "act2_second_round_delay",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "pub · ikinci tur · gece ilerliyor",
+            "en": "pub · round two · evening rolling on"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 4200,
+        "target": "act2_lull_check",
+        "liveActivity": {
+          "phase": "pub_drinks_two",
+          "currentStage": 3,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Masa 7",
+              "en": "Table 7"
+            },
+            {
+              "tr": "Yemek",
+              "en": "Dinner"
+            },
+            {
+              "tr": "Pub",
+              "en": "Pub"
+            },
+            {
+              "tr": "Dönüş",
+              "en": "Drop-off"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Pub'da koyu muhabbet",
+            "en": "Late pub chatter"
+          },
+          "statusBody": {
+            "tr": "Saatler akıyor · pub'da hâlâ beraberler",
+            "en": "Still talking over second round"
+          },
+          "icon": "sparkles"
+        }
+      }
+    },
+    {
+      "id": "act2_lull_check",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Saatlerdir buradayız, müzik biraz yükseldi ve ikimiz de anlık duraksadık. Öğlen Masa 7'de seninle yedekte tuttuğumuz o eğlenceli anı hangisiydi ya?",
+            "en": "Music just went up and a sudden quiet hit our booth. Wait—which fun backup story did we lock back at Table 7?!"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "memory_inject",
+        "options": [
+          {
+            "id": "opt_recall_cat",
+            "label": { "tr": "Üç bacaklı kedi hikayesiydi, anlat!", "en": "The three-legged cat story—tell that!" },
+            "target": "act2_check_cat"
+          },
+          {
+            "id": "opt_recall_ferry",
+            "label": { "tr": "Vapurda uyuyakalma anısıydı!", "en": "The childhood ferry captain story!" },
+            "target": "act2_check_ferry"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act2_check_cat",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "yedek anı açıldı",
+            "en": "backup story triggered"
+          }
+        }
+      ],
+      "transition": {
+        "type": "conditionalNext",
+        "branches": [
+          { "condition": { "var": "rescue_cue", "op": "eq", "value": "cat" }, "target": "act2_cue_hit" }
+        ],
+        "fallback": "act2_cue_miss"
+      }
+    },
+    {
+      "id": "act2_check_ferry",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "yedek anı açıldı",
+            "en": "backup story triggered"
+          }
+        }
+      ],
+      "transition": {
+        "type": "conditionalNext",
+        "branches": [
+          { "condition": { "var": "rescue_cue", "op": "eq", "value": "ferry" }, "target": "act2_cue_hit" }
+        ],
+        "fallback": "act2_cue_miss"
+      }
+    },
+    {
+      "id": "act2_cue_hit",
+      "act": 2,
+      "effects": [
+        { "var": "used_callback", "op": "set", "value": true },
+        { "var": "vibe_percent", "op": "add", "value": 8 }
+      ],
+      "items": [
+        {
+          "type": "conditional",
+          "condition": { "var": "rescue_cue", "op": "eq", "value": "cat" },
+          "thenItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "He ya Tarçın!! Telefondan uyurken fotoğrafını gösterdim, bayağı eridi! 'Bir gün mutlaka sevmeye geleceğim' dedi!",
+                "en": "Yes, Cookie!! Showed her a photo of him snoozing—total meltdown! 'Okay, I have to meet him sometime.'"
+              }
+            }
+          ],
+          "elseItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Doğru ya vapur anısı!! Kaptanın bana simit çay vermesini anlatınca kahkaha patlattı, bütün sessizlik uçtu!",
+                "en": "Yes, the ferry wheelhouse story!! Telling her the captain fed me hot tea till we docked again cracked her right up!"
+              }
+            }
+          ]
+        }
+      ],
+      "transition": { "type": "next", "target": "act2_late_evening_delay" }
+    },
+    {
+      "id": "act2_cue_miss",
+      "act": 2,
+      "effects": [
+        { "var": "vibe_percent", "op": "add", "value": -6 }
+      ],
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Öbürünü seçmiştik sanki... Yarım yamalak anlatınca biraz kekeledim ama neyse toparladık sayılır.",
+            "en": "Thought we picked the other one... Stumbled through half of it, though the music covered most of the awkwardness."
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act2_late_evening_delay" }
+    },
+    {
+      "id": "act2_late_evening_delay",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Simay bir şarkı istedi, grup da ‘aradan sonra’ dedi. Telefonu ters çeviriyorum. Çalarlarsa haber veririm.",
+            "en": "Chloe asked the band for a song. They said after the break. Phone’s going face down. I’ll tell you if they play it."
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 3300,
+        "target": "act2_encore",
+        "liveActivity": {
+          "phase": "pub_late",
+          "currentStage": 3,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Masa 7",
+              "en": "Table 7"
+            },
+            {
+              "tr": "Yemek",
+              "en": "Dinner"
+            },
+            {
+              "tr": "Pub",
+              "en": "Pub"
+            },
+            {
+              "tr": "Dönüş",
+              "en": "Drop-off"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Gece sohbeti",
+            "en": "Late pub evening"
+          },
+          "statusBody": {
+            "tr": "Gece ilerliyor · hâlâ pub'dalar",
+            "en": "Getting late · still talking at the pub"
+          },
+          "icon": "moon.stars"
+        }
+      }
+    },
+    {
+      "id": "act2_bora_darts",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Lavaboya çıkarken Bora yine önümü kesti! 'Kızın yanında oturma da gel dartta kapışalım, kaybeden bütün masayı öder' diye hava atıyor. Reddedip masaya mı döneyim, gaza gelip oynayayım mı?",
+            "en": "Julian cornered me by the hallway! 'Come play darts for the whole tab, loser pays'—he's been practicing here all night. Blow him off and go back to Chloe, or take the ego bait?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_decline_darts",
+            "label": { "tr": "Umursama, 'Kızla sohbetim bölünmesin' de", "en": "Brush him off: 'Rather stay with my date'" },
+            "effects": [
+              { "var": "declined_darts", "op": "set", "value": true },
+              { "var": "vibe_percent", "op": "add", "value": 5 }
+            ],
+            "target": "act2_decline_darts"
+          },
+          {
+            "id": "opt_take_bet",
+            "label": { "tr": "Gaza gel: 'Tamam oynayalım' de", "en": "Take the bait: 'You're on, let's play'" },
+            "effects": [
+              { "var": "vibe_percent", "op": "add", "value": -10 }
+            ],
+            "target": "act2_take_bet"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act2_decline_darts",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "'İşim olmaz' deyip geçtim. Masaya dönünce Simay duymuş galiba, gülümsedi! Şimdi kapanışa doğru hesabı isteyeceğiz, birazdan yazarım.",
+            "en": "Turned him down flat and walked back. Think Chloe overheard—she gave me the warmest look. Wrapping up the tab soon!"
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act2_tab_delay" }
+    },
+    {
+      "id": "act2_take_bet",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "glitchLevel": 2,
+          "haptic": "warning",
+          "text": {
+            "tr": "Aklımı seveyim... Herif dart ustasıymış, Simay'ın yanında rezil olup bir de masasını ödedim!! Hesabı kapatıp kalkıyoruz, birazdan yazarım...",
+            "en": "Why did I play... Guy was a ringer, crushed me in front of Chloe and made me pay his bar tab!! Settling up to leave..."
+          }
+        }
+      ],
+      "transition": { "type": "next", "target": "act2_tab_delay" }
+    },
+    {
+      "id": "act2_tab_delay",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "pub · kapanış hesabı",
+            "en": "pub · closing out the tab"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 2700,
+        "target": "act2_mert_calls",
+        "liveActivity": {
+          "phase": "pub_closing",
+          "currentStage": 3,
+          "totalStages": 4,
+          "stages": [
+            { "tr": "Masa 7", "en": "Table 7" },
+            { "tr": "Yemek", "en": "Dinner" },
+            { "tr": "Pub", "en": "Pub" },
+            { "tr": "Dönüş", "en": "Drop-off" }
+          ],
+          "shortTitle": { "tr": "Pub'dan kalkıyorlar", "en": "Leaving the pub" },
+          "statusBody": {
+            "tr": "Hesap ödeniyor · çıkışa geçiyorlar",
+            "en": "Paying tab and heading out"
+          },
+          "icon": "creditcard"
+        }
+      }
+    },
+    {
+      "id": "act2_mert_calls",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "critical",
+          "text": {
+            "tr": "23:15 · kriz · düğünden dönen mert masadaki telefonu aradı!",
+            "en": "23:15 · panic · Sam called while phone sat on the table!"
+          }
+        },
+        {
+          "type": "message",
+          "glitchLevel": 2,
+          "haptic": "warning",
+          "text": {
+            "tr": "YANDIK!! Hesabı öderken düğünden yeni dönen Mert beni aradı! Telefon masanın üstündeydi ve hoparlörden bağırdı: 'Oğlum bütün gün tek mesaj atmadın, hani buluşmada yazacaktın?!'",
+            "en": "WE'RE DEAD!! Sam finally drove back from the wedding and called ON THE TABLE: 'Bro you never texted my backup once all day—I thought you wanted live advice?!'"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Simay duydu!! Kapıdan çıkarken yüzü değişti, şimdi 'Atacan, sabahtan beri masanın altından kime yazıyordun sen?' diye soracak. İki saniyeye çıkıyoruz!!",
+            "en": "Chloe heard every word!! Walking out the pub door right now and she's glaring at my phone: 'Leo... who WERE you texting all day?!'"
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act3_pub_exit"
+      }
+    },
+    {
+      "id": "act2_encore",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "ÇALDILAR. İlk iki notada elimden tutup beni sahnenin yanına çekti. Montlar sandalyede kaldı. Son seti burada dinliyoruz.",
+            "en": "They played it. Two notes in, she grabbed my hand and pulled me over to the stage. Our coats are still on the chairs. Staying here for the last set."
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 4800,
+        "target": "act2_bora_darts",
+        "liveActivity": {
+          "phase": "pub_late",
+          "currentStage": 3,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Masa 7",
+              "en": "Table 7"
+            },
+            {
+              "tr": "Yemek",
+              "en": "Dinner"
+            },
+            {
+              "tr": "Pub",
+              "en": "Pub"
+            },
+            {
+              "tr": "Dönüş",
+              "en": "Drop-off"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Son set",
+            "en": "Last set"
+          },
+          "statusBody": {
+            "tr": "Sahnenin yanında",
+            "en": "Beside the stage"
+          },
+          "icon": "moon.stars"
+        }
+      }
+    },
+    {
+      "id": "act3_pub_exit",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "warning",
+          "text": {
+            "tr": "23:18 · pub · askılık",
+            "en": "23:18 · by the coat rack"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Askılığın önündeyiz. Simay kollarını kavuşturdu: 'Tamam Atacan, sabahtan beri masanın altında kime yazıyordun?' Yanlış numaraya düştüğünü gülerek itiraf mı edeyim yoksa 'iş grubuydu' mu diyeyim?",
+            "en": "At the coat rack. Chloe crossed her arms: 'Okay Leo—who have you been texting under the table since noon?' Confess the funny wrong-number story or say 'just work'?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_confess_open_line",
+            "label": {
+              "tr": "Gülerek Açık Hat hikayesini itiraf et",
+              "en": "Confess the funny wrong-number truth"
+            },
+            "effects": [
+              {
+                "var": "honest_open_line",
+                "op": "set",
+                "value": true
+              },
+              {
+                "var": "vibe_percent",
+                "op": "add",
+                "value": 8
+              }
+            ],
+            "target": "act3_confess_open_line"
+          },
+          {
+            "id": "opt_work_excuse",
+            "label": {
+              "tr": "Yalan söyle: 'İş grubundan yazıyorlardı'",
+              "en": "Lie: 'Just a work group chat, nothing big'"
+            },
+            "effects": [
+              {
+                "var": "vibe_percent",
+                "op": "add",
+                "value": -14
+              }
+            ],
+            "target": "act3_work_excuse"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act3_confess_open_line",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Altıyı sekiz okuduğumu anlattım. 'Yani bütün gün bir yabancı da bizimle miydi?' dedi. Biraz düşündü, sonra 'Bari selam söyle.' Sana selamı var.",
+            "en": "I told her I read a six as an eight. ‘So a stranger spent the whole day with us?’ She thought about that. ‘Well, say hi for me.’ Chloe says hi."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act2_coats"
+      }
+    },
+    {
+      "id": "act3_work_excuse",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "glitchLevel": 2,
+          "haptic": "warning",
+          "text": {
+            "tr": "'İş grubuydu' deyince yüzü düştü, 'Anladım...' diyip önüne baktı. Yalan söylediğimi anladı galiba. Montuna uzandı.",
+            "en": "Said 'work chat' and her whole face shut down: 'Sure.' Pretty sure she saw straight through that..."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act2_coats"
+      }
+    },
+    {
+      "id": "act2_coats",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Montumun bir kolu ters dönmüş. Dur, şu telefonla aynı anda giyemiyorum. Dışarıda yazarım.",
+            "en": "My coat sleeve’s inside out. Hang on, can’t put this thing on with my phone in my hand. I’ll text you outside."
+          }
+        }
+      ],
+      "transition": {
+        "type": "actBreak",
+        "completedAct": 2,
+        "nextAct": 3,
+        "title": {
+          "tr": "2. Perde Sonu · Son masa",
+          "en": "End of Act 2 · Last table"
+        },
+        "subtitle": {
+          "tr": "Dönüş yoluna geçmek için bir reklam izle veya Tam Erişimi aç.",
+          "en": "Watch one ad to start the walk home, or unlock All Access."
+        },
+        "target": "act3_outside_delay"
+      }
+    }
+  ]
+}

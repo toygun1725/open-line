@@ -1,0 +1,805 @@
+{
+  "act": 1,
+  "nodes": [
+    {
+      "id": "act1_opening",
+      "act": 1,
+      "effects": [
+        {
+          "var": "warmth_percent",
+          "op": "set",
+          "value": 86
+        },
+        {
+          "var": "battery_percent",
+          "op": "set",
+          "value": 78
+        }
+      ],
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "08:14 · uydu rölesi 2.840m · -13°C · açık sivil hat",
+            "en": "08:14 · sat relay 2,840m · -13°C · open civil bridge"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Lütfen bu mesajı kapatma. Ben Emre—Kuzey Sırtı meteoroloji sensörünün pilini değiştirmek için 2.840 metreye çıkmış bir saha teknisyeniyim.",
+            "en": "Please don't swipe this away. My name is Ethan—field tech up at 2,840 meters on North Ridge servicing a weather sensor."
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Erken bastıran tipide buzlu çarşaktan kaydım. Telefonumun ekranı soğukta paramparça oldu; elimdeki tek şey şu beyaz yedek uydu aktarıcısı.",
+            "en": "Slipped on loose scree when an early whiteout hit. My phone shattered in the cold—all I've got left is this white pocket satellite texter."
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Ve harika haber: geçen hafta bakım yaparken acil röle kodunu yanlış girmişler. S.O.S. sinyali kurtarma merkezi yerine rastgele senin telefonuna düştü!",
+            "en": "And great news: whoever serviced the relay last week mistyped the bridge digit. Instead of Mountain Rescue, my SOS dropped onto your phone!"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_check_injury",
+            "label": {
+              "tr": "Durumun nasıl, yaralı mısın?",
+              "en": "Wait—are you hurt?"
+            },
+            "target": "act1_check_injury"
+          },
+          {
+            "id": "opt_wrong_number",
+            "label": {
+              "tr": "Şaka mı bu? 112'yi arasana!",
+              "en": "Is this a prank? Call 911!"
+            },
+            "effects": [
+              {
+                "var": "skeptic_start",
+                "op": "set",
+                "value": true
+              }
+            ],
+            "target": "act1_wrong_number"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_check_injury",
+      "act": 1,
+      "effects": [
+        {
+          "var": "warmth_percent",
+          "op": "add",
+          "value": 4
+        }
+      ],
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Sol dizim fena sıyrıldı ama yürüyebiliyorum, en azından kırık yok. Sağ ol yabancı—soğukta panikten kilitlenmek üzereydim, mesajın toparladı.",
+            "en": "Left knee took a nasty scrape, though I can put weight on it—nothing broken. Thanks, stranger—actually snapped me out of freezing panic."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act1_banter_beat"
+      }
+    },
+    {
+      "id": "act1_wrong_number",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Keşke şaka olsaydı! Dediğim gibi akıllı telefonum taşın üstünde tuz buz oldu; bu alet ses araması yapmıyor, sadece metin paketi atabiliyor.",
+            "en": "Trust me, I wish it were a prank! My phone glass shattered on a boulder—this backup brick has zero voice, just single-recipient SMS."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act1_banter_beat"
+      }
+    },
+    {
+      "id": "act1_banter_beat",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "İyi yanından bakalım: en azından -13 derecede sohbet edecek biri var. Kaydığım yerde çantam iki parçaya açılmış, rüzgar karla örtüyor. Solumda sıcak çay dolu çelik termosla cep ısıtıcısı duruyor, sağımda da telefon kadar değerli yedek lityum pil—ikisini birden kapamadan önce fırtına örtecek, hangisini alayım?",
+            "en": "Silver lining: at least I've got company at -13°C. My pack burst open above the ledge—on the left is my steel thermos & hand warmer, on the right is a spare lithium battery pack. Gust is burying both—which do I grab first?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_grab_thermos",
+            "label": {
+              "tr": "Çelik termos ve ısıtıcı pedi kap.",
+              "en": "Grab steel thermos and warmers."
+            },
+            "effects": [
+              {
+                "var": "has_thermos",
+                "op": "set",
+                "value": true
+              },
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": 2
+              }
+            ],
+            "target": "act1_got_thermos"
+          },
+          {
+            "id": "opt_grab_battery",
+            "label": {
+              "tr": "Yedek lityum pili al, şarj bitmesin.",
+              "en": "Grab spare lithium battery pack."
+            },
+            "effects": [
+              {
+                "var": "has_spare_battery",
+                "op": "set",
+                "value": true
+              },
+              {
+                "var": "battery_percent",
+                "op": "add",
+                "value": 16
+              }
+            ],
+            "target": "act1_got_battery"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_got_thermos",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Akıllıca—çay hâlâ sıcak sayılır! İki yudum aldım, eldivenimin içine kimyasal ısıtıcıyı attım. Rüzgar siperine tırmanıyorum.",
+            "en": "Smart pick—tea's still warm enough to sting! Took a sip and shoved a hand warmer inside my glove. Climbing onto the windbreak ledge."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act1_pack_banter"
+      }
+    },
+    {
+      "id": "act1_got_battery",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Soğukta lityum piller yarı yarıya ölür, bunu yanıma almam hayat kurtaracak. Rüzgar iyice sertleşti, taş çıkıntının altına tırmanıyorum.",
+            "en": "Good call—freezing air cuts battery capacity in half. Wind's howling now, scrambling up beneath a rock overhang."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act1_pack_banter"
+      }
+    },
+    {
+      "id": "act1_pack_banter",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Bir an düşerken bütün çantayı kaybettim sandım; ceketimin fermuarı bile kar dolmuş. Az sonra kayaların üstüne çıkarım, birazdan yazarım.",
+            "en": "Thought I lost the whole pack for a second—zipper's jammed solid with ice. Moving up onto the rocks, text you in a bit."
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_joke_coffee",
+            "label": {
+              "tr": "Kirpiklerin donmadan tırman bakalım!",
+              "en": "Move before your eyelashes freeze!"
+            },
+            "effects": [
+              {
+                "var": "joke_rapport",
+                "op": "set",
+                "value": true
+              },
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": 2
+              }
+            ],
+            "target": "act1_ridge_climb"
+          },
+          {
+            "id": "opt_stay_serious",
+            "label": {
+              "tr": "Dikkat et, buzlu kayaya basma.",
+              "en": "Watch every step on black ice."
+            },
+            "target": "act1_ridge_climb"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_ridge_climb",
+      "act": 1,
+      "items": [
+        {
+          "type": "conditional",
+          "condition": {
+            "var": "joke_rapport",
+            "op": "eq",
+            "value": true
+          },
+          "thenItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Ha! Dağın başında sıcak içecek esprisi duyacağımı hiç sanmazdım. Tamamdır, yukarı çıkınca yazacağım.",
+                "en": "Hah! Never expected hydration banter at 2,840 meters. Fair enough—I'll ping you once I reach shelter."
+              }
+            }
+          ],
+          "elseItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Tamamdır, her adımı test ederek çıkıyorum. Çıkıntıya varınca yazarım.",
+                "en": "Copy that, testing every foothold on the way up. Ping you from the shelter ledge."
+              }
+            }
+          ]
+        },
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "2.840m · rüzgar siperine tırmanış · birazdan",
+            "en": "2,840m · climbing to windbreak · shortly"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 900,
+        "target": "act1_windbreak_arrived",
+        "liveActivity": {
+          "phase": "SHELTER_CLIMB",
+          "currentStage": 1,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Barınak",
+              "en": "Shelter"
+            },
+            {
+              "tr": "Geçit",
+              "en": "Pass"
+            },
+            {
+              "tr": "İstasyon",
+              "en": "Station"
+            },
+            {
+              "tr": "Kurtarma",
+              "en": "Rescue"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Rüzgar Siperi",
+            "en": "Ledge Climb"
+          },
+          "statusBody": {
+            "tr": "Kaya siperine tırmanıyor",
+            "en": "Climbing to rock shelter"
+          },
+          "icon": "figure.walk"
+        }
+      }
+    },
+    {
+      "id": "act1_windbreak_arrived",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Kaya oyuğunun içine girdim, rüzgarı biraz kesti. Buradan vadi inerken yol ikiye ayrılıyor: ya dik kestirme sırtı ya da işaretli geçit patikasını tutacağım.",
+            "en": "Under the rock overhang now—breaks the wind a bit. From here I can drop down a steep gullied shortcut or follow the ridge marker posts."
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Bir de kurtarma eğitiminde öğretirler: soğukta kafa dağılmaya başlarsa telefonun ucundaki kişiyle tek bir 'uyanık tutma kelimesi' belirlenir. Hangisini seçelim?",
+            "en": "Quick mountain-safety trick: in freezing wind you lock one bright mental check-in phrase with your spotter so cold haze can't fog you out. Pick ours:"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "memory_anchor",
+        "options": [
+          {
+            "id": "opt_word_coffee",
+            "label": {
+              "tr": "Sıcak filtre kahve.",
+              "en": "Hot black coffee."
+            },
+            "effects": [
+              {
+                "var": "checkin_word",
+                "op": "set",
+                "value": "coffee"
+              },
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": 4
+              }
+            ],
+            "target": "act1_checkin_locked"
+          },
+          {
+            "id": "opt_word_star",
+            "label": {
+              "tr": "Kuzey yıldızı.",
+              "en": "North ridge star."
+            },
+            "effects": [
+              {
+                "var": "checkin_word",
+                "op": "set",
+                "value": "northstar"
+              },
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": 4
+              }
+            ],
+            "target": "act1_checkin_locked"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_checkin_locked",
+      "act": 1,
+      "items": [
+        {
+          "type": "system",
+          "severity": "success",
+          "text": {
+            "tr": "yoklama parolası kilitlendi",
+            "en": "check-in word locked"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Aklımda tuttum. Şimdi haritaya göre vadi tarafındaki ilk acil durum ikmal sandığına ulaşıp orada soluklanmam gerekiyor.",
+            "en": "Locked in. Trail map shows an orange mountain supply cache ten minutes ahead before the ridge drop. Moving out."
+          }
+        },
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "ikmal kutusuna yürüyüş · yoğun tipi",
+            "en": "walk to supply cache · heavy squall · a while"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 2700,
+        "target": "act1_cache_found",
+        "liveActivity": {
+          "phase": "CACHE_WALK",
+          "currentStage": 1,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Barınak",
+              "en": "Shelter"
+            },
+            {
+              "tr": "Geçit",
+              "en": "Pass"
+            },
+            {
+              "tr": "İstasyon",
+              "en": "Station"
+            },
+            {
+              "tr": "Kurtarma",
+              "en": "Rescue"
+            }
+          ],
+          "shortTitle": {
+            "tr": "İkmal Kutusu",
+            "en": "Supply Cache"
+          },
+          "statusBody": {
+            "tr": "Tipide ikmal kutusunu arıyor",
+            "en": "Searching snow cache"
+          },
+          "icon": "shippingbox"
+        }
+      }
+    },
+    {
+      "id": "act1_cache_found",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Paslanmış turuncu metal sandığı karın altından kazıp açtım! İçinde bir çift çelik buz kramponu ile su geçirmez tüpte iki kırmızı işaret fişeği var—ama çantam yırtıldığı için sadece birine yer açabilirim:",
+            "en": "Dug out the rusted orange trail cache! Inside are a pair of steel ice crampons and waterproof red distress flares—though my torn pack only fits one:"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_take_crampons",
+            "label": {
+              "tr": "Çelik buz kramponlarını tak.",
+              "en": "Strap on steel ice crampons."
+            },
+            "effects": [
+              {
+                "var": "has_crampons",
+                "op": "set",
+                "value": true
+              },
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": 2
+              }
+            ],
+            "target": "act1_took_crampons"
+          },
+          {
+            "id": "opt_take_flare",
+            "label": {
+              "tr": "Kırmızı işaret fişeklerini al.",
+              "en": "Pack red distress flares."
+            },
+            "effects": [
+              {
+                "var": "has_flare",
+                "op": "set",
+                "value": true
+              }
+            ],
+            "target": "act1_took_flare"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_took_crampons",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Botların altına geçirdim; buz tutmuş yokuşta kayıp bir yerimi kırmaktan iyidir. Şimdi tipinin dinmesi için siperde bekleyeceğim.",
+            "en": "Latched them onto my boots—better than breaking an ankle on sheer ridge ice. Hunkering down while the squall peaks."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act1_squall_choice"
+      }
+    },
+    {
+      "id": "act1_took_flare",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Su geçirmez tüpteki iki kırmızı işaret fişeğini ceket cebime soktum; kurtarma ekibi gelirse bulutun arasından yerimi görürler.",
+            "en": "Slipped two waterproof red flares into my chest pocket—if a chopper gets close tonight, they'll spot me through the cloud deck."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act1_squall_choice"
+      }
+    },
+    {
+      "id": "act1_squall_choice",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Rüzgar hızı saatte 70 kilometreyi geçti, göz gözü görmüyor. Sandığın dibinde mola verip ısıyı mı koruyayım yoksa şeritleri takip edip yürümeye devam mı edeyim?",
+            "en": "Gusts are topping 70 km/h—total whiteout ahead. Hunker down behind the boulder for 15 minutes or push through?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_wait_squall",
+            "label": {
+              "tr": "Kayanın arkasında dinlen, ısın.",
+              "en": "Rest behind boulder, hold heat."
+            },
+            "effects": [
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": 4
+              }
+            ],
+            "target": "act1_squall_rest"
+          },
+          {
+            "id": "opt_push_squall",
+            "label": {
+              "tr": "Durma, hemen geçide yürü.",
+              "en": "Keep moving toward the pass."
+            },
+            "effects": [
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": -8
+              },
+              {
+                "var": "battery_percent",
+                "op": "add",
+                "value": -4
+              }
+            ],
+            "target": "act1_squall_push"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_squall_rest",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Doğru karar; sırtımı taşa yaslayıp kapüşonu çektim. Biraz nefeslenip hava açınca geçide geçeceğim, yarım saate yazarım.",
+            "en": "Smart—pressed my back against the rock out of the wind. Catching my breath out of the wind, text you in a while."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act1_squall_delay"
+      }
+    },
+    {
+      "id": "act1_squall_push",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Rüzgar yüzümü jilet gibi kesiyor! Zorla birkaç yüz metre ilerledim ama soğuk iliklerime işledi...",
+            "en": "Sleet feels like needles on my cheek! Fought forward a few hundred meters, though the cold bit straight through my shell..."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act1_squall_delay"
+      }
+    },
+    {
+      "id": "act1_squall_delay",
+      "act": 1,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "siper molası · -14°C · uzun yürüyüş",
+            "en": "ridge shelter wait · -14°C · long trek"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 5400,
+        "target": "act1_relay_ping",
+        "liveActivity": {
+          "phase": "SQUALL_SHELTER",
+          "currentStage": 1,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Barınak",
+              "en": "Shelter"
+            },
+            {
+              "tr": "Geçit",
+              "en": "Pass"
+            },
+            {
+              "tr": "İstasyon",
+              "en": "Station"
+            },
+            {
+              "tr": "Kurtarma",
+              "en": "Rescue"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Tipi Molası",
+            "en": "Squall Shelter"
+          },
+          "statusBody": {
+            "tr": "Tipinin dinmesini bekliyor",
+            "en": "Waiting out whiteout"
+          },
+          "icon": "wind.snow"
+        }
+      }
+    },
+    {
+      "id": "act1_relay_ping",
+      "act": 1,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Fırtına hafifçe aralandı! Yukarıdaki acil uydu rölesine hâlâ manuel koordinat gitmemiş ama telefonun ucunda senin olman beni ayakta tutuyor.",
+            "en": "Squall broke for a bit! Satellite relay still hasn't routed me to Dispatch, though knowing someone is actually reading on the other end keeps me sharp."
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "İki yoldan Kuzey Geçidi'ne çıkacağım. Bataryayı korumak için aktarıcıyı uyku moduna alıp geçide ulaşınca açayım mı?",
+            "en": "Starting the climb up to North Pass. Put the beacon in low-power sleep during the trek to save battery?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_sleep_beacon",
+            "label": {
+              "tr": "Evet, pili koru ve geçitten yaz.",
+              "en": "Yes, save battery till the pass."
+            },
+            "effects": [
+              {
+                "var": "battery_percent",
+                "op": "add",
+                "value": 4
+              }
+            ],
+            "target": "act1_pass_walk_delay"
+          },
+          {
+            "id": "opt_keep_pinging",
+            "label": {
+              "tr": "Hayır, acil sinyali açık bırak.",
+              "en": "Keep distress ping running live."
+            },
+            "effects": [
+              {
+                "var": "battery_percent",
+                "op": "add",
+                "value": -10
+              }
+            ],
+            "target": "act1_pass_walk_delay"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act1_pass_walk_delay",
+      "act": 1,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "kuzey geçidine çıkış · uzun yürüyüş",
+            "en": "climb to north pass · long trek"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 5400,
+        "target": "act2_pass_arrival",
+        "liveActivity": {
+          "phase": "NORTH_PASS",
+          "currentStage": 2,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Barınak",
+              "en": "Shelter"
+            },
+            {
+              "tr": "Geçit",
+              "en": "Pass"
+            },
+            {
+              "tr": "İstasyon",
+              "en": "Station"
+            },
+            {
+              "tr": "Kurtarma",
+              "en": "Rescue"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Kuzey Geçidi",
+            "en": "North Pass"
+          },
+          "statusBody": {
+            "tr": "Buzlu geçide tırmanıyor",
+            "en": "Climbing North Pass"
+          },
+          "icon": "mountain.2"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "storyId": "save-yourself-v2-alpine",
+  "version": "2.0.0",
+  "startNodeId": "act1_opening",
+  "checkpoints": [
+    {
+      "id": "start",
+      "nodeId": "act1_opening",
+      "title": {
+        "tr": "1. Barınak · Sabah: Kuzey Sırtı",
+        "en": "1. Shelter · Morning: North Ridge"
+      }
+    },
+    {
+      "id": "act2_pass",
+      "nodeId": "act2_pass_arrival",
+      "title": {
+        "tr": "2. Geçit · Öğle: Buz Sırtı & İzler",
+        "en": "2. Pass · Noon: Ice Ridge & Tracks"
+      }
+    },
+    {
+      "id": "act2_station",
+      "nodeId": "act2_station_door",
+      "title": {
+        "tr": "3. İstasyon · İkindi: 1998 Gözlem Evi",
+        "en": "3. Station · Afternoon: 1998 Outpost"
+      }
+    },
+    {
+      "id": "act3_rescue",
+      "nodeId": "act3_tower_ascent",
+      "title": {
+        "tr": "4. Kurtarma · Gece: Röle Kulesi",
+        "en": "4. Rescue · Night: Relay Tower"
+      }
+    }
+  ],
+  "variables": {
+    "warmth_percent": {
+      "type": "int",
+      "default": 86,
+      "min": 0,
+      "max": 100
+    },
+    "battery_percent": {
+      "type": "int",
+      "default": 78,
+      "min": 0,
+      "max": 100
+    },
+    "checkin_word": {
+      "type": "string",
+      "default": "none"
+    },
+    "has_crampons": {
+      "type": "bool",
+      "default": false
+    },
+    "has_flare": {
+      "type": "bool",
+      "default": false
+    },
+    "has_spare_battery": {
+      "type": "bool",
+      "default": false
+    },
+    "has_thermos": {
+      "type": "bool",
+      "default": false
+    },
+    "radio_fixed": {
+      "type": "bool",
+      "default": false
+    },
+    "helped_climb": {
+      "type": "bool",
+      "default": false
+    },
+    "found_defne": {
+      "type": "bool",
+      "default": false
+    },
+    "joke_rapport": {
+      "type": "bool",
+      "default": false
+    },
+    "skeptic_start": {
+      "type": "bool",
+      "default": false
+    }
+  }
+}

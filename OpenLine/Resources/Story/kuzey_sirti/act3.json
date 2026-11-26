@@ -1,0 +1,884 @@
+{
+  "act": 3,
+  "nodes": [
+    {
+      "id": "act3_tower_ascent",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "warning",
+          "text": {
+            "tr": "gece · -19°C · son etap",
+            "en": "night · -19°C · final stage"
+          }
+        },
+        {
+          "type": "conditional",
+          "condition": {
+            "var": "skeptic_start",
+            "op": "eq",
+            "value": true
+          },
+          "thenItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Biliyor musun, sabah ilk mesajımda bana şaka yaptığımı sanıyordun—şimdi gecenin bir yarısı -19 derecede hayatta kalmama yardım ediyorsun.",
+                "en": "Funny how this morning you thought I was pulling a prank—and now you're spotting me through -19°C darkness."
+              }
+            }
+          ]
+        },
+        {
+          "type": "conditional",
+          "condition": {
+            "var": "helped_climb",
+            "op": "eq",
+            "value": true
+          },
+          "thenItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "İstasyondan çıktım! Yüz metre önümde o beyaz fener hâlâ yanıp sönüyor. İki yol var: dik kar duvarından doğrudan tırmanış mı, dolambaçlı kaya sırtı mı?",
+                "en": "Out of the cabin! White strobe is still blinking a hundred meters up. Direct snow face climb or longer sheltered rock spine?"
+              }
+            }
+          ],
+          "elseItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Vadi düzlüğüne inişe başladım ama tipi her şeyi düzleştirmiş. Çam sınırı boyundan mı ineyim yoksa rüzgar koridorundan kestirme mi gideyim?",
+                "en": "Dropping toward the valley clearing, though drifting snow buried every cairn. Timberline loop or steep wind chute shortcut?"
+              }
+            }
+          ]
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_safe_spine",
+            "label": {
+              "tr": "Korumalı kaya sırtını / sınırı tut.",
+              "en": "Take safer sheltered spine."
+            },
+            "effects": [
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": 2
+              }
+            ],
+            "target": "act3_route_delay"
+          },
+          {
+            "id": "opt_risky_chute",
+            "label": {
+              "tr": "Dik kar kulvarından kestirme git.",
+              "en": "Push the steep snow chute."
+            },
+            "effects": [
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": -12
+              }
+            ],
+            "target": "act3_route_delay"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act3_route_delay",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "gece tırmanışı / inişi · yarım saat bir saate",
+            "en": "night traverse · a while"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 2700,
+        "target": "act3_traverse_outcome",
+        "liveActivity": {
+          "phase": "TOWER_TRAVERSE",
+          "currentStage": 4,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Barınak",
+              "en": "Shelter"
+            },
+            {
+              "tr": "Geçit",
+              "en": "Pass"
+            },
+            {
+              "tr": "İstasyon",
+              "en": "Station"
+            },
+            {
+              "tr": "Kurtarma",
+              "en": "Rescue"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Gece Rotası",
+            "en": "Night Traverse"
+          },
+          "statusBody": {
+            "tr": "Röle ışığına ilerliyor",
+            "en": "Heading to relay beacon"
+          },
+          "icon": "light.beacon.max"
+        }
+      }
+    },
+    {
+      "id": "act3_traverse_outcome",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "konum ulaşıldı",
+            "en": "waypoint reached"
+          }
+        }
+      ],
+      "transition": {
+        "type": "conditionalNext",
+        "branches": [
+          {
+            "condition": {
+              "var": "helped_climb",
+              "op": "eq",
+              "value": true
+            },
+            "target": "act3_found_defne_scene"
+          }
+        ],
+        "fallback": "act3_valley_alone"
+      }
+    },
+    {
+      "id": "act3_found_defne_scene",
+      "act": 3,
+      "effects": [
+        {
+          "var": "found_defne",
+          "op": "set",
+          "value": true
+        }
+      ],
+      "items": [
+        {
+          "type": "message",
+          "haptic": "pulse",
+          "text": {
+            "tr": "Röle kulesine vardım—DEFNE BURADA! Acil battaniyesine sarılmış, bileği burkulmuş ama bilinci açık ve yaşıyor!",
+            "en": "Reached the relay tower—CLARA IS HERE! Wrapped in a foil bivy bag, sprained ankle, conscious and alive!"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Kulenin rüzgar arkası kutusunda uydu röle düğmesini resetledim; sonunda kurtarma merkezi gerçek GPS koordinatımızı gördü!",
+            "en": "Reset the frozen tower relay switch—Mountain Rescue Dispatch finally locked onto our true GPS coordinates!"
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act3_cold_wait_delay"
+      }
+    },
+    {
+      "id": "act3_valley_alone",
+      "act": 3,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Aşağıdaki helikopter düzlüğüne vardım. İlk kez açık gökyüzünden uydu tam sinyal aldı—ama kuledeki fener burada görünmüyor bile...",
+            "en": "Made it down to the valley clearing. Satellite uplink finally got clean sky—though that high blinking light isn't even visible from here..."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act3_cold_wait_delay"
+      }
+    },
+    {
+      "id": "act3_cold_wait_delay",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "warning",
+          "text": {
+            "tr": "kurtarma ekibi yaklaşıyor · bir süre · -19°C",
+            "en": "rescue inbound · a while · -19°C"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 3600,
+        "target": "act3_cold_haze",
+        "liveActivity": {
+          "phase": "RESCUE_WAIT",
+          "currentStage": 4,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Barınak",
+              "en": "Shelter"
+            },
+            {
+              "tr": "Geçit",
+              "en": "Pass"
+            },
+            {
+              "tr": "İstasyon",
+              "en": "Station"
+            },
+            {
+              "tr": "Kurtarma",
+              "en": "Rescue"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Kurtarma Bekleyişi",
+            "en": "Rescue Wait"
+          },
+          "statusBody": {
+            "tr": "Ekip helikopterini bekliyor",
+            "en": "Waiting for rescue chopper"
+          },
+          "icon": "waveform"
+        }
+      }
+    },
+    {
+      "id": "act3_cold_haze",
+      "act": 3,
+      "items": [
+        {
+          "type": "message",
+          "glitchLevel": 2,
+          "haptic": "warning",
+          "text": {
+            "tr": "Göz kapaklarım... inanılmaz ağırlaştı... oturup şu kar duvarına iki dakika yaslanırsam hiçbir sorun kalmayacak gibi...",
+            "en": "Eyelids feel like lead... if I just lean back against the snow wall for a minute, the cold won't even hurt..."
+          }
+        },
+        {
+          "type": "message",
+          "glitchLevel": 2,
+          "text": {
+            "tr": "Hey yabancı... sabah seninle bir uyanık kalma parolası belirlemiştik... neydi o?! Gözlerimi kapatıyorum...",
+            "en": "Hey stranger... we locked a wake-up phrase this morning... what was it?! Eyes keep closing..."
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "memory_inject",
+        "options": [
+          {
+            "id": "opt_wake_coffee",
+            "label": {
+              "tr": "UYAN EMRE! Sıcak filtre kahve!",
+              "en": "WAKE UP ETHAN! Hot black coffee!"
+            },
+            "target": "act3_check_coffee"
+          },
+          {
+            "id": "opt_wake_star",
+            "label": {
+              "tr": "UYAN EMRE! Kuzey yıldızı!",
+              "en": "WAKE UP ETHAN! North ridge star!"
+            },
+            "target": "act3_check_star"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act3_check_coffee",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "acil uyandırma sinyali gönderildi",
+            "en": "wake-up relay ping transmitted"
+          }
+        }
+      ],
+      "transition": {
+        "type": "conditionalNext",
+        "branches": [
+          {
+            "condition": {
+              "var": "checkin_word",
+              "op": "eq",
+              "value": "coffee"
+            },
+            "target": "act3_woke_up"
+          }
+        ],
+        "fallback": "act3_sluggish_wake"
+      }
+    },
+    {
+      "id": "act3_check_star",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "acil uyandırma sinyali gönderildi",
+            "en": "wake-up relay ping transmitted"
+          }
+        }
+      ],
+      "transition": {
+        "type": "conditionalNext",
+        "branches": [
+          {
+            "condition": {
+              "var": "checkin_word",
+              "op": "eq",
+              "value": "northstar"
+            },
+            "target": "act3_woke_up"
+          }
+        ],
+        "fallback": "act3_sluggish_wake"
+      }
+    },
+    {
+      "id": "act3_woke_up",
+      "act": 3,
+      "effects": [
+        {
+          "var": "warmth_percent",
+          "op": "add",
+          "value": 12
+        }
+      ],
+      "items": [
+        {
+          "type": "message",
+          "haptic": "pulse",
+          "text": {
+            "tr": "Hıh—kalktım! Doğru kelimeyi görünce yerimden fırladım; olduğum yerde zıplayıp kollarımı çırpıyorum. Sağ ol—az kalsın uyuyup kalıyordum!",
+            "en": "Whoa—I'm up! Seeing that exact phrase snapped me upright; jumping in place to get my blood moving. Thanks—almost drifted off!"
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act3_rotor_delay"
+      }
+    },
+    {
+      "id": "act3_sluggish_wake",
+      "act": 3,
+      "effects": [
+        {
+          "var": "warmth_percent",
+          "op": "add",
+          "value": -22
+        }
+      ],
+      "items": [
+        {
+          "type": "system",
+          "severity": "critical",
+          "text": {
+            "tr": "hipotermi riski",
+            "en": "hypothermia drift"
+          }
+        },
+        {
+          "type": "message",
+          "glitchLevel": 3,
+          "haptic": "warning",
+          "text": {
+            "tr": "Sabah seçtiğimiz kelime... bu değildi sanki... her neyse ekran titreşimi uyandırdı ama çok üşüyorum...",
+            "en": "Don't think... that was our word... buzzer still woke me though I'm shaking hard..."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act3_rotor_delay"
+      }
+    },
+    {
+      "id": "act3_rotor_delay",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "kurtarma yaklaşımı · yarım saat bir saate",
+            "en": "chopper approach · a while"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 2700,
+        "target": "act3_chopper_overhead",
+        "liveActivity": {
+          "phase": "CHOPPER_NEAR",
+          "currentStage": 4,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Barınak",
+              "en": "Shelter"
+            },
+            {
+              "tr": "Geçit",
+              "en": "Pass"
+            },
+            {
+              "tr": "İstasyon",
+              "en": "Station"
+            },
+            {
+              "tr": "Kurtarma",
+              "en": "Rescue"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Helikopter Sesi",
+            "en": "Chopper Inbound"
+          },
+          "statusBody": {
+            "tr": "Kurtarma helikopteri yakında",
+            "en": "Rescue chopper overhead"
+          },
+          "icon": "airplane"
+        }
+      }
+    },
+    {
+      "id": "act3_chopper_overhead",
+      "act": 3,
+      "items": [
+        {
+          "type": "message",
+          "haptic": "pulse",
+          "text": {
+            "tr": "DUYUYOR MUSUN—PERVANE SESİ! Bulut tabakasının hemen üstünden dolanıyorlar ama tipi yüzünden bizi aşağıda göremiyorlar!",
+            "en": "I HEAR ROTORS! They're circling just above the cloud deck, though blowing snow is hiding our spot!"
+          }
+        },
+        {
+          "type": "conditional",
+          "condition": {
+            "var": "has_flare",
+            "op": "eq",
+            "value": true
+          },
+          "thenItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Sabah aldığımız kırmızı işaret fişeği tam cebimde! Ya onu yakayım ya da uydu acil gücünü verip anten ışığını açayım.",
+                "en": "Still got that red flare we grabbed this morning! Light the flare or dump remaining battery into tower floodlight?"
+              }
+            }
+          ],
+          "elseItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Yanımızda fişek yok ama bataryayı zorlayıp projektörü yakabilir ya da VHF frekansını tarayabilirim. Hangisini yapayım?",
+                "en": "No flares on me, though I can either sweep the radio band or overdrive the beacon lamp! Which one?"
+              }
+            }
+          ]
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_clean_beacon",
+            "label": {
+              "tr": "Olduğun yerden ışık/telsizle sinyal ver.",
+              "en": "Signal from cover with light or radio."
+            },
+            "effects": [
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": 4
+              }
+            ],
+            "target": "act3_beacon_bonus"
+          },
+          {
+            "id": "opt_snow_march",
+            "label": {
+              "tr": "Açık kayalığa doğru koş, el salla.",
+              "en": "Sprint onto exposed rock, wave."
+            },
+            "effects": [
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": -16
+              },
+              {
+                "var": "battery_percent",
+                "op": "add",
+                "value": -20
+              }
+            ],
+            "target": "act3_final_delay"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act3_beacon_bonus",
+      "act": 3,
+      "items": [
+        {
+          "type": "conditional",
+          "condition": {
+            "any": [
+              {
+                "var": "has_flare",
+                "op": "eq",
+                "value": true
+              },
+              {
+                "var": "radio_fixed",
+                "op": "eq",
+                "value": true
+              }
+            ]
+          },
+          "thenItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "GÖRDÜLER! Kırmızı parlama / telsiz sinyali sisin arasından anında yanıt aldı—spot ışığı tam üstümüze kilitlendi!",
+                "en": "THEY SAW US! That red glow / radio lock cut straight through the mist—their spotlight just pinned our ledge!"
+              }
+            }
+          ],
+          "elseItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "El fenerim ve uydu flaşıyla dik açıyla işaret verdim; pilot iki kere iniş ışığını yakıp söndürdü, alçalıyorlar!",
+                "en": "Flashed my headlamp and satellite screen upright—pilot blinked the belly floodlight twice, they're descending!"
+              }
+            }
+          ]
+        }
+      ],
+      "transition": {
+        "type": "conditionalNext",
+        "branches": [
+          {
+            "condition": {
+              "any": [
+                {
+                  "var": "has_flare",
+                  "op": "eq",
+                  "value": true
+                },
+                {
+                  "var": "radio_fixed",
+                  "op": "eq",
+                  "value": true
+                }
+              ]
+            },
+            "target": "act3_equipment_boost"
+          }
+        ],
+        "fallback": "act3_final_delay"
+      }
+    },
+    {
+      "id": "act3_equipment_boost",
+      "act": 3,
+      "effects": [
+        {
+          "var": "warmth_percent",
+          "op": "add",
+          "value": 8
+        }
+      ],
+      "items": [
+        {
+          "type": "system",
+          "severity": "success",
+          "text": {
+            "tr": "görüş kilidi kuruldu · vinç alçalıyor",
+            "en": "visual lock confirmed · hoist descending"
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act3_final_delay"
+      }
+    },
+    {
+      "id": "act3_final_delay",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "kurtarma operasyonu",
+            "en": "rescue hoist"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 1800,
+        "target": "act3_final_branch",
+        "liveActivity": {
+          "phase": "FINAL_RESCUE",
+          "currentStage": 4,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Barınak",
+              "en": "Shelter"
+            },
+            {
+              "tr": "Geçit",
+              "en": "Pass"
+            },
+            {
+              "tr": "İstasyon",
+              "en": "Station"
+            },
+            {
+              "tr": "Kurtarma",
+              "en": "Rescue"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Vinç İnişi",
+            "en": "Chopper Hoist"
+          },
+          "statusBody": {
+            "tr": "Helikopter inişe geçiyor",
+            "en": "Chopper lowering hoist"
+          },
+          "icon": "cross.case"
+        }
+      }
+    },
+    {
+      "id": "act3_final_branch",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "son rapor alınıyor",
+            "en": "receiving final status"
+          }
+        }
+      ],
+      "transition": {
+        "type": "conditionalNext",
+        "branches": [
+          {
+            "condition": {
+              "all": [
+                {
+                  "var": "found_defne",
+                  "op": "eq",
+                  "value": true
+                },
+                {
+                  "var": "warmth_percent",
+                  "op": "gte",
+                  "value": 55
+                }
+              ]
+            },
+            "target": "ending_perfect"
+          },
+          {
+            "condition": {
+              "var": "warmth_percent",
+              "op": "gte",
+              "value": 35
+            },
+            "target": "ending_solo"
+          }
+        ],
+        "fallback": "ending_lost"
+      }
+    },
+    {
+      "id": "ending_perfect",
+      "act": 3,
+      "effects": [
+        {
+          "var": "warmth_percent",
+          "op": "set",
+          "value": 100
+        }
+      ],
+      "items": [
+        {
+          "type": "system",
+          "severity": "success",
+          "text": {
+            "tr": "kurtarma tamamlandı · vadi reviri · sıcak çay",
+            "en": "rescue complete · valley clinic · safe & warm"
+          }
+        },
+        {
+          "type": "message",
+          "haptic": "pulse",
+          "text": {
+            "tr": "Günaydın yabancı! Ben Emre—şehre inince ilk iş kendi telefonumu açtım. Defne'nin ayak bileği alçıda ama keyfi gayet yerinde, ikimiz de sapasağlamız!",
+            "en": "Morning, stranger! It's Ethan—turned my backup phone on down at the valley clinic. Clara's ankle is in a walking boot, otherwise we're both totally fine!"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Beni -19 derecede uyanık tutup yukarı tırmanmaya ikna ettiğin için ne desem az. Bütün bir gün hattın ucunda kaldığın için sağ ol—sıcak bir kahve borcum olsun!",
+            "en": "Can't thank you enough for keeping me awake in -19°C and pushing me up that ridge. Owe you the hottest mug of black coffee in town!"
+          }
+        }
+      ],
+      "transition": {
+        "type": "ending",
+        "endingId": "perfect_rescue",
+        "title": {
+          "tr": "Kusursuz Kurtarma",
+          "en": "Perfect Rescue"
+        },
+        "summary": {
+          "tr": "Hem Emre hem kayıp buzul araştırmacısı Defne helikopterle sağ salim indirildi.",
+          "en": "Both Ethan and missing glaciologist Clara were airlifted safely to the valley."
+        }
+      }
+    },
+    {
+      "id": "ending_solo",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "warning",
+          "text": {
+            "tr": "vadi kurtarma noktası · tek kişi tahliye edildi",
+            "en": "valley evac point · solo airlift complete"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Ben vadi revirindeyim, beni helikopterle indirdiler... Doktorlar parmaklarımı yeni ısıttı. İyi ki bütün gün benimle kaldın.",
+            "en": "Made it into the valley infirmary, they airlifted me out... Medics just got my hands warmed back up. Thank you for staying on the line."
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Ama üst kuledeki feneri söndüğünü söylediler; Defne'ye sabaha karşı arama ekibi çıkaracaklarmış. Keşke oraya tırmanacak gücü bulabilseydim...",
+            "en": "They told me the upper relay strobe went dark before dawn; ground teams are still sweeping for Clara. Wish we'd made it up to her..."
+          }
+        }
+      ],
+      "transition": {
+        "type": "ending",
+        "endingId": "solo_survival",
+        "title": {
+          "tr": "Tek Başına Dönüş",
+          "en": "Solo Survival"
+        },
+        "summary": {
+          "tr": "Emre hayatta kaldı fakat Defne'ye ulaşılamadı.",
+          "en": "Ethan survived, though Clara wasn't reached in time."
+        }
+      }
+    },
+    {
+      "id": "ending_lost",
+      "act": 3,
+      "effects": [
+        {
+          "var": "warmth_percent",
+          "op": "set",
+          "value": 0
+        }
+      ],
+      "items": [
+        {
+          "type": "message",
+          "glitchLevel": 3,
+          "haptic": "warning",
+          "text": {
+            "tr": "Helikopterin ışığı... çok yaklaştı... ama elim düğmeye basm— uyuyam—",
+            "en": "Chopper beam... right above... fingers won't press the ke— can't stay awak—"
+          }
+        },
+        {
+          "type": "system",
+          "severity": "critical",
+          "text": {
+            "tr": "[Uydu rölesi yanıt vermiyor — Son konum: 2.840m Kuzey Sırtı]",
+            "en": "[Satellite relay unresponsive — Last fix: 2,840m North Ridge]"
+          }
+        }
+      ],
+      "transition": {
+        "type": "ending",
+        "endingId": "signal_lost",
+        "title": {
+          "tr": "Sinyal Kaybı",
+          "en": "Signal Lost"
+        },
+        "summary": {
+          "tr": "Vücut ısısı kritik sınırın altına düştü ve uydu paketi kesildi.",
+          "en": "Body warmth dropped past critical threshold and uplink went dark."
+        }
+      }
+    }
+  ]
+}

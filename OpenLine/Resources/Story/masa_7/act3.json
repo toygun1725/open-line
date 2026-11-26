@@ -1,0 +1,579 @@
+{
+  "act": 3,
+  "nodes": [
+    {
+      "id": "act3_outside_delay",
+      "act": 3,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Ana caddeye doğru yürüyoruz, az ileride soracağım eve bırakmayı. Birazdan yazarım.",
+            "en": "Walking toward the main avenue—I'll text in a few."
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 1200,
+        "target": "act3_taxi_fork",
+        "liveActivity": {
+          "phase": "avenue_walk",
+          "currentStage": 4,
+          "totalStages": 4,
+          "stages": [
+            { "tr": "Masa 7", "en": "Table 7" },
+            { "tr": "Yemek", "en": "Dinner" },
+            { "tr": "Pub", "en": "Pub" },
+            { "tr": "Dönüş", "en": "Drop-off" }
+          ],
+          "shortTitle": { "tr": "Evine doğru", "en": "Walking out" },
+          "statusBody": {
+            "tr": "Pub'dan ana caddeye çıkıyorlar",
+            "en": "Walking out onto main avenue"
+          },
+          "icon": "figure.walk"
+        }
+      }
+    },
+    {
+      "id": "act3_taxi_fork",
+      "act": 3,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Durağa geldik. 'Buradan yürürüm, sen ters tarafta kalıyorsun' dedi. Birlikte yürümek ister mi diye sorabilirim. Ya da burada vedalaşırız.",
+            "en": "At the stop. ‘I can walk from here. You live the other way.’ I could ask if she wants company. Or we could say goodnight here."
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_walk_her_home",
+            "label": {
+              "tr": "‘Biraz daha yürüyelim mi?’ diye sor",
+              "en": "Ask if she wants a little more company"
+            },
+            "effects": [
+              {
+                "var": "walked_home",
+                "op": "set",
+                "value": true
+              },
+              {
+                "var": "vibe_percent",
+                "op": "add",
+                "value": 6
+              }
+            ],
+            "target": "act3_walk_her_home"
+          },
+          {
+            "id": "opt_let_cab",
+            "label": {
+              "tr": "Burada vedalaş, yolu ona bırak",
+              "en": "Say goodnight and let her walk"
+            },
+            "effects": [
+              {
+                "var": "vibe_percent",
+                "op": "add",
+                "value": 6
+              }
+            ],
+            "target": "act3_let_cab"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act3_walk_her_home",
+      "act": 3,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "'Biraz daha yürüyelim mi?' dedim. Anahtarını cebine geri koydu. 'Olur. Hatta sahilden dolanalım.'",
+            "en": "I asked if she fancied a little more company. She slipped her keys back in her pocket. ‘Yeah. Let’s take the long way.’"
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act3_walk_street_delay"
+      }
+    },
+    {
+      "id": "act3_let_cab",
+      "act": 3,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "'Tamam, iyi yürüyüşler' dedim. Köşeyi dönünce telefon titredi. Simay: 'Az önceki şarkının adını bulursan atsana.'",
+            "en": "I wished her a good walk. My phone buzzed as I turned the corner. Chloe: ‘Send me the name of that song if you find it.’"
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act3_walk_street_delay"
+      }
+    },
+    {
+      "id": "act3_walk_street_delay",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "gece · dönüş yolu",
+            "en": "night · heading home"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 2700,
+        "target": "act3_building_front",
+        "liveActivity": {
+          "phase": "street_walk",
+          "currentStage": 4,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Masa 7",
+              "en": "Table 7"
+            },
+            {
+              "tr": "Yemek",
+              "en": "Dinner"
+            },
+            {
+              "tr": "Pub",
+              "en": "Pub"
+            },
+            {
+              "tr": "Dönüş",
+              "en": "Drop-off"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Dönüş yolu",
+            "en": "Heading home"
+          },
+          "statusBody": {
+            "tr": "Atacan yolda",
+            "en": "Leo is on his way"
+          },
+          "icon": "house"
+        }
+      }
+    },
+    {
+      "id": "act3_building_front",
+      "act": 3,
+      "items": [
+        {
+          "type": "conditional",
+          "condition": {
+            "var": "walked_home",
+            "op": "eq",
+            "value": true
+          },
+          "thenItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Apartmanın kapısına geldik. Çantasından anahtarını ararken aklıma geldi: öğlen Masa 7'de hesabı beklerken peçeteye minik bir 'Masa 7' çizmiştim cebimde duruyor. Vereyim mi şimdi yoksa saçma mı olur?",
+                "en": "At her apartment door now. Remembered I folded a tiny 'Table 7' doodle on a bistro napkin earlier at lunch—hand it to her now or keep it pocketed?"
+              }
+            }
+          ],
+          "elseItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Eve vardım. Öğlen Masa 7'den kalan minik peçete çizimim cebimde çıktı. Fotosunu çekip 'İyi geceler' diye atayım mı yoksa hiç mesaj atıp darlamayayım mı?",
+                "en": "Just got back to my street and found the tiny Table 7 napkin doodle I pocketed at lunch. Snap a photo to say goodnight or don't push it?"
+              }
+            }
+          ]
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_give_keepsake",
+            "label": {
+              "tr": "Masa 7 çizimini onunla paylaş",
+              "en": "Share the little Table 7 sketch"
+            },
+            "effects": [
+              {
+                "var": "gave_keepsake",
+                "op": "set",
+                "value": true
+              },
+              {
+                "var": "vibe_percent",
+                "op": "add",
+                "value": 4
+              }
+            ],
+            "target": "act3_apartment_door"
+          },
+          {
+            "id": "opt_keep_pocket",
+            "label": {
+              "tr": "Cebinde kalsın, sade veda et",
+              "en": "Keep it simple and leave it pocketed"
+            },
+            "effects": [
+              {
+                "var": "vibe_percent",
+                "op": "add",
+                "value": -4
+              }
+            ],
+            "target": "act3_apartment_door"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act3_apartment_door",
+      "act": 3,
+      "items": [
+        {
+          "type": "conditional",
+          "condition": {
+            "var": "walked_home",
+            "op": "eq",
+            "value": true
+          },
+          "thenItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Son an!! 'Çok uzun ve garip bir gün oldu ama benimle kaldığın için sağ ol' deyip baktı. Şimdi nasıl vedalaşayım?",
+                "en": "Last second!! Looking at my phone waiting on her door message/goodbye—how do I close out the night?"
+              }
+            }
+          ],
+          "elseItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Şarkıyı bulduk. Simay eve vardığını yazdı, bir de 'iyi ki istedik o parçayı' dedi. Ben de bir şey söylemek istiyorum.",
+                "en": "Found the song. Chloe texted that she got home. ‘Glad we asked for that one.’ I want to tell her something before we call it a night."
+              }
+            }
+          ]
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_awkward_exit",
+            "label": {
+              "tr": "'Neyse iyi geceler, görüşürüz işte' de",
+              "en": "'Anyway goodnight, catch you around'"
+            },
+            "effects": [
+              {
+                "var": "vibe_percent",
+                "op": "add",
+                "value": -10
+              }
+            ],
+            "target": "act3_final_wait_delay"
+          },
+          {
+            "id": "opt_warm_goodbye",
+            "label": {
+              "tr": "'Seninle gün nasıl geçti anlamadım' de",
+              "en": "'Time flew with you—let's see what happens'"
+            },
+            "effects": [
+              {
+                "var": "warm_goodbye",
+                "op": "set",
+                "value": true
+              },
+              {
+                "var": "vibe_percent",
+                "op": "add",
+                "value": 5
+              }
+            ],
+            "target": "act3_final_wait_delay"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act3_final_wait_delay",
+      "act": 3,
+      "items": [
+        {
+          "type": "conditional",
+          "condition": {
+            "var": "walked_home",
+            "op": "eq",
+            "value": true
+          },
+          "thenItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Söyledim. Kapıdan ayrıldım, eve varınca sana da yazacağım.",
+                "en": "Said it. Just left her doorstep. I’ll text you when I’m in."
+              }
+            }
+          ],
+          "elseItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Gönderdim. Şarkı hâlâ kafama takılı. Telefon elimde, cevap gelirse yazarım.",
+                "en": "Sent. That song is still stuck in my head. Phone’s right here. I’ll tell you if she replies."
+              }
+            }
+          ]
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 1500,
+        "target": "act3_ending_router",
+        "liveActivity": {
+          "phase": "final_verdict",
+          "currentStage": 4,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Masa 7",
+              "en": "Table 7"
+            },
+            {
+              "tr": "Yemek",
+              "en": "Dinner"
+            },
+            {
+              "tr": "Pub",
+              "en": "Pub"
+            },
+            {
+              "tr": "Dönüş",
+              "en": "Drop-off"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Son cevap",
+            "en": "Final verdict"
+          },
+          "statusBody": {
+            "tr": "Atacan dönüş yolunda · son haber geliyor",
+            "en": "Leo walking home with the verdict"
+          },
+          "icon": "message.fill"
+        }
+      }
+    },
+    {
+      "id": "act3_ending_router",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "00:45 · gece sonu",
+            "en": "00:45 · end of the night"
+          }
+        }
+      ],
+      "transition": {
+        "type": "conditionalNext",
+        "branches": [
+          {
+            "condition": {
+              "all": [
+                {
+                  "var": "vibe_percent",
+                  "op": "gte",
+                  "value": 74
+                },
+                {
+                  "var": "warm_goodbye",
+                  "op": "eq",
+                  "value": true
+                }
+              ]
+            },
+            "target": "ending_second_date"
+          },
+          {
+            "condition": {
+              "var": "vibe_percent",
+              "op": "gte",
+              "value": 48
+            },
+            "target": "ending_just_friends"
+          }
+        ],
+        "fallback": "ending_dont_call"
+      }
+    },
+    {
+      "id": "ending_second_date",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "success",
+          "text": {
+            "tr": "gece sonu · ikinci buluşma",
+            "en": "end of the night · second date"
+          }
+        },
+        {
+          "type": "conditional",
+          "condition": {
+            "var": "walked_home",
+            "op": "eq",
+            "value": true
+          },
+          "thenItems": [
+            {
+              "type": "message",
+              "haptic": "pulse",
+              "text": {
+                "tr": "OLDU BE YABANCI!! Anahtarı kilide soktu tam giriyordu, döndü gülümsedi ve dedi ki: 'Ee... yarın kaçta görüşüyoruz?'",
+                "en": "WE DID IT STRANGER!! Right as she put her key in the lock, she turned back smiling and asked: 'So... what time are we meeting tomorrow?'"
+              }
+            }
+          ],
+          "elseItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "YAZDI. 'Bu şarkıyı yarın bir kahveyle tekrar dinlesek? Ee, kaçta görüşüyoruz?' Dur bi, ekrana bakıp sırıtıyorum.",
+                "en": "SHE REPLIED. ‘Same song tomorrow, over coffee? So what time are we meeting?’ Hang on. I’m just grinning at the screen."
+              }
+            }
+          ]
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Bütün gün yanımda durdun, ne desem az. Hadi kaçtım ben, yarın için dinleneyim—Açık Hat'ta yine görüşürüz!",
+            "en": "Thank you for having my back all day—seriously owe you one. Catch you on another Open Line!"
+          }
+        }
+      ],
+      "transition": {
+        "type": "ending",
+        "endingId": "second_date",
+        "title": {
+          "tr": "\"Ee... yarın kaçta görüşüyoruz?\"",
+          "en": "\"So... what time tomorrow?\""
+        },
+        "summary": {
+          "tr": "Simay ertesi gün için saati sordu. Atacan’ın telefona bakıp ne yazacağını bilemediği bir an daha.",
+          "en": "Chloe asked what time they should meet tomorrow. For once, Leo was speechless for a good reason."
+        }
+      }
+    },
+    {
+      "id": "ending_just_friends",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "warning",
+          "text": {
+            "tr": "kibar veda",
+            "en": "polite goodbye"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Simay'ın cevabı şu: 'Bugün güzeldi Atacan. Ben bunu arkadaşlık olarak hissediyorum.'",
+            "en": "Chloe’s answer: ‘I liked today, Leo. For me this feels like friendship.’"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "İçim biraz burkuldu ama iyi ki açık söyledi. Sağ ol bu arada. Bugün bayağı mesai yaptın benimle.",
+            "en": "That stung a bit, but I’m glad she told me. Thanks, by the way. You put in a whole shift with me today."
+          }
+        }
+      ],
+      "transition": {
+        "type": "ending",
+        "endingId": "just_friends",
+        "title": {
+          "tr": "Arkadaş Olarak Kalalım",
+          "en": "Better Off As Friends"
+        },
+        "summary": {
+          "tr": "Gün kavgasız gürültüsüz geçti ama bazı anlarda çekingen kalınınca Simay günün sonunda işi dostlukta bıraktı.",
+          "en": "The day stayed friendly and polite, yet hesitating at key moments left Chloe closing the night on platonic terms."
+        }
+      }
+    },
+    {
+      "id": "ending_dont_call",
+      "act": 3,
+      "items": [
+        {
+          "type": "system",
+          "severity": "critical",
+          "text": {
+            "tr": "hat kapandı",
+            "en": "line closed"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Simay'ın son sözü: 'Bence hiç zorlamayalım Atacan. Bir daha beni arama.'",
+            "en": "Chloe’s last words: ‘Let’s leave it here, Leo. Please don’t call me again.’"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Tamam. Telefonu cebime koyuyorum. Eve kadar biraz yürürüm.",
+            "en": "Okay. Putting my phone away. I think I’ll walk the rest of the way."
+          }
+        }
+      ],
+      "transition": {
+        "type": "ending",
+        "endingId": "dont_call",
+        "title": {
+          "tr": "\"Bir daha beni arama\"",
+          "en": "\"Don't call me again\""
+        },
+        "summary": {
+          "tr": "Simay vedasını açıkça söyledi. Atacan eve yalnız döndü.",
+          "en": "Chloe made her goodbye clear. Leo went home alone."
+        }
+      }
+    }
+  ]
+}

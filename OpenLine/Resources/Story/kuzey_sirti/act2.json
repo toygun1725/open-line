@@ -1,0 +1,690 @@
+{
+  "act": 2,
+  "nodes": [
+    {
+      "id": "act2_pass_arrival",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "öğle · kuzey geçidi 2.960m · -16°C",
+            "en": "noon · north pass 2,960m · -16°C"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Geçide çıktım ama garip bir şey gördüm... Ekim'den beri bu rotada benden başka tek bir izin olmaması gerekiyordu.",
+            "en": "Made it onto North Pass, and something makes zero sense... Nobody else has permit clearance on this ridge past October."
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Taze karın üstünde iki günlük yarı örtülmüş krampon izleri ve kayalara bağlanmış parlak turuncu rota şeritleri var! Önce izlerin nereye tırmandığına mı bakayım, yoksa karşıdaki dar buz sırtını mı geçeyim?",
+            "en": "There are two-day-old boot tracks half buried in fresh drift and orange trail ribbons tied to rocks! Should I check where the tracks climb first, or cross the narrow ice ridge?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_follow_ribbons",
+            "label": {
+              "tr": "İzlerin nereye gittiğine bak.",
+              "en": "Check where the tracks lead."
+            },
+            "target": "act2_inspect_tracks"
+          },
+          {
+            "id": "opt_ice_bridge",
+            "label": {
+              "tr": "Vadiye dönen buz sırtını geç.",
+              "en": "Cross the ice ridge first."
+            },
+            "target": "act2_ice_bridge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act2_inspect_tracks",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "İzler vadiye değil, tam tersine yukarıdaki terk edilmiş meteoroloji istasyonuna doğru tırmanıyor! Karşımızdaki dar buz köprüsünden geçmem şart.",
+            "en": "Tracks don't drop down to the valley—they climb straight toward the abandoned weather outpost higher up! Gotta cross the narrow ice bridge next."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act2_bridge_crossing"
+      }
+    },
+    {
+      "id": "act2_ice_bridge",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Buz sırtının ortasına basmadan hemen önce sol taraftaki taşın altında parlak metal bir parça seçtim!",
+            "en": "Right before stepping onto the icy ridge spine, I spotted glinting metal half-buried next to the marker pole!"
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act2_bridge_crossing"
+      }
+    },
+    {
+      "id": "act2_bridge_crossing",
+      "act": 2,
+      "items": [
+        {
+          "type": "conditional",
+          "condition": {
+            "var": "has_crampons",
+            "op": "eq",
+            "value": true
+          },
+          "thenItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "İyi ki kramponları almışız! Çelik dişler cam gibi buza zımba gibi oturdu, tek adımda karşıya geçtim.",
+                "en": "Thank goodness we grabbed those crampons! Steel spikes bit straight into glare ice and got me clean across."
+              }
+            }
+          ],
+          "elseItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Krampon olmadığı için geçidin kenarında ayağım kayıp buz kürüne yuvarlandım! Ellerim soğuktan uyuştu ama tırmanabildim.",
+                "en": "Without crampons my boot skated straight off the glaze ice into a snowdrift! Hands went numb digging back up."
+              }
+            }
+          ]
+        }
+      ],
+      "transition": {
+        "type": "conditionalNext",
+        "branches": [
+          {
+            "condition": {
+              "var": "has_crampons",
+              "op": "eq",
+              "value": true
+            },
+            "target": "act2_found_lid"
+          }
+        ],
+        "fallback": "act2_bridge_bruised"
+      }
+    },
+    {
+      "id": "act2_bridge_bruised",
+      "act": 2,
+      "effects": [
+        {
+          "var": "warmth_percent",
+          "op": "add",
+          "value": -12
+        }
+      ],
+      "items": [
+        {
+          "type": "system",
+          "severity": "warning",
+          "text": {
+            "tr": "buzda düşüş",
+            "en": "ice slip"
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act2_found_lid"
+      }
+    },
+    {
+      "id": "act2_found_lid",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Karın içinden çıkardığım şeye inanamıyorum: buzul araştırma ekibine ait ezilmiş bir termos kapağı... Üzerinde 'D. KAYA' yazılı etiket var!",
+            "en": "Can't believe what I just pulled from the drift: a glacier survey thermos lid... stamped with 'C. REID' on the metal ring!"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "İki gün önce yerel haberlerde Kuzey Vadisi'nde kayıp ilanı verilen buzul araştırmacısı Defne! Demek yanlış yamaca çıkmış ve hâlâ yukarıda!",
+            "en": "Clara—the glaciologist reported missing on mountain radio two days ago! She must've taken the wrong ridge fork and is still up here!"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_track_station",
+            "label": {
+              "tr": "Eski gözlem istasyonuna yürü.",
+              "en": "Climb to the old outpost."
+            },
+            "effects": [
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": 2
+              }
+            ],
+            "target": "act2_station_walk_delay"
+          },
+          {
+            "id": "opt_check_gully",
+            "label": {
+              "tr": "Vadideki iniş izini ara.",
+              "en": "Check valley ridge first."
+            },
+            "effects": [
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": -6
+              },
+              {
+                "var": "battery_percent",
+                "op": "add",
+                "value": -4
+              }
+            ],
+            "target": "act2_gully_check"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act2_gully_check",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Vadi ağzında tek bir turuncu iz bile yok; ayak izleri kesinlikle yukarıdaki 1998 gözlem istasyonuna tırmanmış. Zaman kaybettim ama artık eminim.",
+            "en": "Zero ribbons toward the valley floor—her boots definitely climbed up toward the 1998 weather station. Cost me some warmth, though now I'm sure."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act2_station_walk_delay"
+      }
+    },
+    {
+      "id": "act2_station_walk_delay",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "3.050m gözlem istasyonuna yürüyüş · uzun yürüyüş",
+            "en": "ascent to 3,050m outpost · long trek"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 5400,
+        "target": "act2_station_door",
+        "liveActivity": {
+          "phase": "OUTPOST_CLIMB",
+          "currentStage": 3,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Barınak",
+              "en": "Shelter"
+            },
+            {
+              "tr": "Geçit",
+              "en": "Pass"
+            },
+            {
+              "tr": "İstasyon",
+              "en": "Station"
+            },
+            {
+              "tr": "Kurtarma",
+              "en": "Rescue"
+            }
+          ],
+          "shortTitle": {
+            "tr": "İstasyon Yolu",
+            "en": "Outpost Climb"
+          },
+          "statusBody": {
+            "tr": "1998 istasyonuna ulaşıyor",
+            "en": "Reaching 1998 outpost"
+          },
+          "icon": "house"
+        }
+      }
+    },
+    {
+      "id": "act2_station_door",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "warning",
+          "text": {
+            "tr": "ikindi · 1998 gözlem evi 3.050m · -18°C",
+            "en": "afternoon · 1998 outpost 3,050m · -18°C"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Buz tutmuş ahşap kapının mandalını kırıp içeri girdim! Rüzgar kesildi ama içerisi mezar gibi sessiz... dur: sobada hâlâ ılık kül var!",
+            "en": "Pried the frozen wooden latch open and stepped inside! Dead quiet out of the wind... wait: the cast-iron stove still has barely lukewarm ash!"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Masada Defne'nin su geçirmez saha defteri açık duruyor: 'Rüzgar anteni kopardı, 300m yukarıdaki röle kulesinde yedek fenerim açık. Sol ayak bileğim burkuldu.'",
+            "en": "Clara's waterproof logbook lies open on the bench: 'Storm snapped roof antenna—climbing 300m up to relay tower with my strobe beacon. Sprained left ankle.'"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "İstasyonda gaz lambalı eski bir ocak ve buzlanmış bir VHF telsiz buldum. Hangisiyle uğraşayım?",
+            "en": "There's a kerosene camp stove on the shelf and an iced-over VHF emergency radio. Which one do I tackle first?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_light_stove",
+            "label": {
+              "tr": "Gaz ocağını yak, donma riskini kır.",
+              "en": "Light the stove, thaw out fast."
+            },
+            "effects": [
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": 14
+              }
+            ],
+            "target": "act2_stove_lit"
+          },
+          {
+            "id": "opt_fix_radio",
+            "label": {
+              "tr": "Buzlu VHF telsizi tamir et.",
+              "en": "Thaw and wire the VHF radio."
+            },
+            "effects": [
+              {
+                "var": "radio_fixed",
+                "op": "set",
+                "value": true
+              },
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": -4
+              }
+            ],
+            "target": "act2_radio_attempt"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act2_stove_lit",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "İkinci kibritte çaktı! Ellerim ve ceketim sonunda çözüldü; kan dolaşımım yerine geldi resmen.",
+            "en": "Caught on the second match! Fingers and jacket finally thawed—feels like I've got blood in my hands again."
+          }
+        },
+        {
+          "type": "conditional",
+          "condition": {
+            "var": "has_thermos",
+            "op": "eq",
+            "value": true
+          },
+          "thenItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Üstelik ocağın üzerinde erittiğim karla termosumu yeniden kaynar suyla doldurdum! Şimdi pencereden fırtınayı dinliyorum.",
+                "en": "Plus I melted fresh snow over the stove to refill our thermos boiling hot! Watching the storm through the frosted pane."
+              }
+            }
+          ]
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act2_station_wait_delay"
+      }
+    },
+    {
+      "id": "act2_radio_attempt",
+      "act": 2,
+      "items": [
+        {
+          "type": "conditional",
+          "condition": {
+            "var": "has_spare_battery",
+            "op": "eq",
+            "value": true
+          },
+          "thenItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Sabah aldığımız yedek lityum pilden paralel kablo çektim—VHF ışığı yeşil yandı! Ses menzili kısıtlı ama kurtarma yaklaşınca direkt duyacaklar.",
+                "en": "Spliced power from our spare morning battery—the VHF power lamp blinked green! Short range, though rescue choppers will pick up our tone!"
+              }
+            }
+          ],
+          "elseItems": [
+            {
+              "type": "message",
+              "text": {
+                "tr": "Kendi uydu pilimden aktardığım akımla röle ışığı cılız da olsa yandı; ancak uydu bataryam biraz düştü.",
+                "en": "Borrowed juice from my own satellite brick to wake the VHF light—weak signal, and it drained my battery a notch."
+              }
+            }
+          ]
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act2_radio_drain_check"
+      }
+    },
+    {
+      "id": "act2_radio_drain_check",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "vhf telsiz bağlantısı · istasyon kontrolü",
+            "en": "vhf radio check · outpost interior"
+          }
+        }
+      ],
+      "transition": {
+        "type": "conditionalNext",
+        "branches": [
+          {
+            "condition": {
+              "var": "has_spare_battery",
+              "op": "eq",
+              "value": true
+            },
+            "target": "act2_station_wait_delay"
+          }
+        ],
+        "fallback": "act2_radio_cost"
+      }
+    },
+    {
+      "id": "act2_radio_cost",
+      "act": 2,
+      "effects": [
+        {
+          "var": "battery_percent",
+          "op": "add",
+          "value": -12
+        }
+      ],
+      "items": [
+        {
+          "type": "system",
+          "severity": "warning",
+          "text": {
+            "tr": "uydu pili hızla düşüyor · güç çekişi yüksek",
+            "en": "satellite battery dropping fast · heavy draw"
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act2_station_wait_delay"
+      }
+    },
+    {
+      "id": "act2_station_wait_delay",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "info",
+          "text": {
+            "tr": "gözlem evi · hava raporu aralığı · bir süre",
+            "en": "outpost shelter · storm window · a while"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 3600,
+        "target": "act2_strobe_glimpse",
+        "liveActivity": {
+          "phase": "OUTPOST_PREP",
+          "currentStage": 3,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Barınak",
+              "en": "Shelter"
+            },
+            {
+              "tr": "Geçit",
+              "en": "Pass"
+            },
+            {
+              "tr": "İstasyon",
+              "en": "Station"
+            },
+            {
+              "tr": "Kurtarma",
+              "en": "Rescue"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Gözlem Evi",
+            "en": "1998 Outpost"
+          },
+          "statusBody": {
+            "tr": "İstasyonda fırtınayı dinliyor",
+            "en": "Monitoring storm in cabin"
+          },
+          "icon": "thermometer.snowflake"
+        }
+      }
+    },
+    {
+      "id": "act2_strobe_glimpse",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Hava kararmaya başladı... Tam kuzey penceresindeki buzu kazıdım: 300 metre yukarıdaki röle kulesinde ritmik, zayıf bir beyaz fener ışığı yanıp sönüyor!",
+            "en": "Dusk just hit... Scraped frost off the north window: 300 meters higher up the ridge, a faint white strobe is blinking at steady intervals!"
+          }
+        },
+        {
+          "type": "message",
+          "text": {
+            "tr": "Bu kesin Defne. Ama gece sıcaklığı -19 dereceye iniyor. Şimdi büyük karar: kendi canımı garantiye alıp aşağıdaki vadi düzlüğüne mi ineyim, yoksa Defne için yukarı mı çıkayım?",
+            "en": "That has to be Clara. Night temp is diving to -19°C. Hard call: play it safe down toward valley clearing, or climb higher to reach Clara?"
+          }
+        }
+      ],
+      "transition": {
+        "type": "choice",
+        "choiceKind": "standard",
+        "options": [
+          {
+            "id": "opt_climb_defne",
+            "label": {
+              "tr": "Yukarı çık, Defne'yi yalnız bırakma.",
+              "en": "Climb up, don't leave Clara alone."
+            },
+            "effects": [
+              {
+                "var": "helped_climb",
+                "op": "set",
+                "value": true
+              },
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": 4
+              }
+            ],
+            "target": "act2_choose_rescue"
+          },
+          {
+            "id": "opt_head_valley",
+            "label": {
+              "tr": "Aşağı in, önce kendi canını kurtar.",
+              "en": "Descend now, secure your own survival."
+            },
+            "effects": [
+              {
+                "var": "helped_climb",
+                "op": "set",
+                "value": false
+              },
+              {
+                "var": "warmth_percent",
+                "op": "add",
+                "value": 6
+              }
+            ],
+            "target": "act2_choose_solo"
+          }
+        ]
+      }
+    },
+    {
+      "id": "act2_choose_rescue",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Haklısın. O fener ışığını gördükten sonra arkamı dönüp inemem. Rüzgarın gece yarısı boşluğunu bekleyip kuleye çıkacağım.",
+            "en": "You're right—no way I walk away after seeing that strobe blink. Waiting for the evening wind lull, then climbing to the tower."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act2_evening_delay"
+      }
+    },
+    {
+      "id": "act2_choose_solo",
+      "act": 2,
+      "items": [
+        {
+          "type": "message",
+          "text": {
+            "tr": "Anladım... Mantıklı olan tek parçada kalıp helikopter iniş alanına ulaşmak. İçim hiç rahat değil ama rüzgar hafifleyince vadiye ineceğim.",
+            "en": "Understood... Staying alive to guide rescue down at the clearing makes sense. Feels awful leaving that light behind, though I'll move at dusk lull."
+          }
+        }
+      ],
+      "transition": {
+        "type": "next",
+        "target": "act2_evening_delay"
+      }
+    },
+    {
+      "id": "act2_evening_delay",
+      "act": 2,
+      "items": [
+        {
+          "type": "system",
+          "severity": "warning",
+          "text": {
+            "tr": "gece fırtına konaklaması · gece molası",
+            "en": "overnight cabin storm shelter · overnight"
+          }
+        }
+      ],
+      "transition": {
+        "type": "delay",
+        "seconds": 28800,
+        "target": "act3_tower_ascent",
+        "liveActivity": {
+          "phase": "NIGHT_WINDOW",
+          "currentStage": 3,
+          "totalStages": 4,
+          "stages": [
+            {
+              "tr": "Barınak",
+              "en": "Shelter"
+            },
+            {
+              "tr": "Geçit",
+              "en": "Pass"
+            },
+            {
+              "tr": "İstasyon",
+              "en": "Station"
+            },
+            {
+              "tr": "Kurtarma",
+              "en": "Rescue"
+            }
+          ],
+          "shortTitle": {
+            "tr": "Gece Aralığı",
+            "en": "Night Window"
+          },
+          "statusBody": {
+            "tr": "Gece hamlesi için bekliyor",
+            "en": "Waiting for wind lull"
+          },
+          "icon": "moon.stars"
+        }
+      }
+    }
+  ]
+}
