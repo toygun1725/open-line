@@ -29,10 +29,10 @@ final class StoryEngine {
         guard let last = timeline.last, last.fireDate <= currentTime, case .ending = last.kind else { return nil }
         return last
     }
-    var latestMessage: String? {
+    var latestMessage: (text: String, date: Date)? {
         for event in visibleEvents.reversed() {
             if case .message(let text, _, _, _) = event.kind {
-                return StoryLoader.interpolate(text.text(for: language), variables: event.stateSnapshot)
+                return (StoryLoader.interpolate(text.text(for: language), variables: event.stateSnapshot), event.fireDate)
             }
         }
         return nil

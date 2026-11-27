@@ -18,9 +18,10 @@ struct ReceiverTimelineView: View {
 
         ScrollViewReader { proxy in
             ScrollView {
-                LazyVStack(spacing: 10) {
-                    ForEach(visible) { event in
-                        eventRow(for: event, isNewestMessage: event.id == newestMessageID, palette: palette)
+                LazyVStack(spacing: 5) {
+                    ForEach(Array(visible.enumerated()), id: \.element.id) { index, event in
+                        let previous = index > 0 ? visible[index - 1].kind : nil
+                        eventRow(for: event, previous: previous, isNewestMessage: event.id == newestMessageID, palette: palette)
                             .id(event.id.uuidString)
                     }
 
@@ -34,10 +35,9 @@ struct ReceiverTimelineView: View {
                             .font(.footnote).foregroundStyle(palette.inkPrimary)
                     }
                     if let activeDelay = engine.activeDelayEvent,
-                       case .delayStart(let spec, _, let endDate) = activeDelay.kind {
+                       case .delayStart(let spec, _, _) = activeDelay.kind {
                         ActiveDelayBannerView(
                             spec: spec,
-                            endDate: endDate,
                             language: engine.language,
                             palette: palette
                         )
@@ -59,33 +59,37 @@ struct ReceiverTimelineView: View {
                 }
             }
         }
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(palette.wellBg)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(palette.wellBorder, lineWidth: 1)
-                )
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .background(palette.wellBg, in: RoundedRectangle(cornerRadius: 6))
+        .clipShape(RoundedRectangle(cornerRadius: 6))
     }
 
     @ViewBuilder
-    private func eventRow(for event: ScheduledEvent, isNewestMessage: Bool, palette: StoryPalette) -> some View {
+    private func eventRow(for event: ScheduledEvent, previous: ScheduledEvent.EventKind?, isNewestMessage: Bool,
+                          palette: StoryPalette) -> some View {
         switch event.kind {
         case .message(let text, let glitchLevel, _, let integritySnapshot):
             let resolved = StoryLoader.interpolate(
                 text.text(for: engine.language),
                 variables: event.stateSnapshot
             )
-            LedgerPlateView(
-                text: resolved,
-                fontStyle: engine.fontStyle,
-                palette: palette,
-                isActiveNewest: isNewestMessage,
-                glitchLevel: glitchLevel,
-                integrity: isNewestMessage ? engine.integrityPercent : integritySnapshot
-            )
+            VStack(alignment: .leading, spacing: 5) {
+                if !continuesMessageGroup(previous) {
+                    Text(engine.activeStory.senderName.text(for: engine.language))
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(palette.accent)
+                        .padding(.leading, 2)
+                        .padding(.top, 6)
+                }
+                LedgerPlateView(
+                    text: resolved,
+                    fontStyle: engine.fontStyle,
+                    palette: palette,
+                    isActiveNewest: isNewestMessage,
+                    glitchLevel: glitchLevel,
+                    integrity: isNewestMessage ? engine.integrityPercent : integritySnapshot
+                )
+            }
+            .padding(.trailing, 24)
             .transition(.asymmetric(insertion: .opacity.combined(with: .offset(y: 6)), removal: .identity))
 
         case .system(let text, let severity):
@@ -124,6 +128,7 @@ struct ReceiverTimelineView: View {
                 choiceKind: choiceKind,
                 chosenIndex: event.chosenOptionIndex,
                 language: engine.language,
+                replyFontStyle: engine.profile.replyFontStyle,
                 palette: palette,
                 onSelect: { optionIdx in
                     engine.selectChoice(eventID: event.id, optionIndex: optionIdx)
@@ -146,6 +151,11 @@ struct ReceiverTimelineView: View {
                 onHome: onHome, onRestart: { Task { await engine.replay(eventID: event.id) } }
             )
         }
+    }
+
+    private func continuesMessageGroup(_ previous: ScheduledEvent.EventKind?) -> Bool {
+        if case .message? = previous { return true }
+        return false
     }
 }
 
@@ -180,31 +190,18 @@ private struct TypingIndicator: View {
 
 private struct ActiveDelayBannerView: View {
     let spec: LiveActivitySpec
-    let endDate: Date
     let language: AppLanguage
     let palette: StoryPalette
 
     var body: some View {
-        HStack(spacing: 8) {
-            Rectangle()
-                .fill(palette.ruleHairline)
-                .frame(height: 1)
-
-            HStack(spacing: 6) {
-                Image(systemName: "hourglass")
-                    .font(.caption2)
-                Text(spec.statusBody.text(for: language))
-                    .lineLimit(1)
-                Text("·")
-                Text(endDate, style: .timer)
-            }
-            .font(AppTypography.telemetry(size: 12))
-            .foregroundStyle(palette.inkTelemetry)
-            .fixedSize(horizontal: true, vertical: false)
-
-            Rectangle()
-                .fill(palette.ruleHairline)
-                .frame(height: 1)
+        VStack(spacing: 8) {
+            Rectangle().fill(palette.ruleHairline).frame(height: 1)
+            Text(spec.statusBody.text(for: language))
+                .font(AppTypography.telemetry(size: 12))
+                .foregroundStyle(palette.inkTelemetry)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity)
         }
         .padding(.vertical, 4)
     }

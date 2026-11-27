@@ -2,10 +2,10 @@ const $ = (id) => document.getElementById(id);
 const catalog = BUNDLE.catalog;
 const entries = catalog.stories;
 const key = "openline.preview.v1";
-const blank = () => ({ lang: "tr", paid: false, muted: false, font: "serif", runs: {} });
+const blank = () => ({ lang: "tr", paid: false, muted: false, font: "serif", replyFont: "serif", runs: {} });
 function readSave() {
   try {
-    return JSON.parse(localStorage.getItem(key)) || blank();
+    return { ...blank(), ...JSON.parse(localStorage.getItem(key)) };
   } catch {
     return blank();
   }
@@ -65,8 +65,7 @@ function home() {
     btn("settings", "⚙", "gear", 'aria-label="' + tr("Ayarlar", "Settings") + '"') +
     '</header><div class="clockarea"><div class="date">' +
     esc(new Date(now).toLocaleDateString(locale, { weekday: "long", day: "numeric", month: "long" })) +
-    '</div><div class="clock">' +
-    new Date(now).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", hour12: false }) +
+    '</div><div class="clock" id="menuClock">' +
     '</div></div><section class="inbox">' +
     entries
       .map((s) => {
@@ -74,34 +73,35 @@ function home() {
           events = visible(run, now),
           last = events.filter((e) => e.kind === "message").at(-1),
           locked = !s.isFree && !state.paid;
-        const end = reachedEnd(run, now);
+        const direct = Boolean(run) && !locked;
+        const isExpanded = !direct && expanded === s.id;
         const action = locked
           ? tr("Tam Erişimi aç", "Unlock All Access")
-          : end
-            ? tr("Konuşmayı oku", "Read conversation")
-            : run
-              ? tr("Konuşmaya dön", "Resume conversation")
-              : tr("Hatta bağlan", "Connect");
+          : tr("Hatta bağlan", "Connect");
+        const time = last ? new Date(last.at).toLocaleTimeString(locale, {
+          hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+        }) : "";
         const name = loc(s.senderName);
         return (
           '<article class="card ' +
           (s.theme === "ice_blue" ? "ice" : "") +
-          '"><button class="row" data-action="expand" data-id="' +
-          s.id +
-          '" aria-expanded="' +
-          (expanded === s.id) +
-          '"><span class="avatar">' +
+          '"><button class="row" data-action="' + (direct ? "connect" : "expand") +
+          '" data-id="' + s.id + '"' +
+          (direct ? "" : ' aria-expanded="' + isExpanded + '"') +
+          '><span class="avatar" aria-hidden="true">' +
           esc(name[0]) +
           '</span><span class="msg"><span class="by">' +
           esc(name) +
-          '</span> <span class="storytitle">· ' +
+          '</span><span class="storytitle">' +
           esc(loc(s.title)) +
           '</span><span class="snippet">' +
           esc(last ? msg(last) : loc(s.invitation)) +
-          '</span></span><span aria-hidden="true">' +
-          (expanded === s.id ? "−" : "›") +
+          '</span></span><span class="row-tail">' +
+          (time ? '<time>' + esc(time) + '</time>' : "") +
+          (locked ? '<span class="line-lock" role="img" aria-label="' + tr("Kilitli", "Locked") + '"></span>' :
+            '<span class="row-chevron" aria-hidden="true">' + (isExpanded ? "⌄" : "›") + '</span>') +
           "</span></button>" +
-          (expanded === s.id
+          (isExpanded
             ? '<div class="detail"><p>' +
               esc(loc(s.synopsis)) +
               "</p>" +
@@ -122,6 +122,39 @@ function isTyping(run, count, now) {
 }
 let renderedRun = null;
 let renderedCount = 0;
+let renderedModal = null;
+let renderedLine = null;
+let restoreFocus = null;
+function chatHeader(story, events, now) {
+  const lastDelay = events.findLast((event) => event.kind === "delay");
+  const activeDelay = lastDelay?.until > now ? lastDelay : null;
+  const stage = activeDelay?.spec.currentStage ?? events.reduce(
+    (current, event) => event.kind === "delay" ? Math.max(current, event.spec.currentStage) : current,
+    1,
+  );
+  const total = story.stageLabels.length;
+  const value = events.findLast((event) => event.vars)?.vars[story.metricVar] ??
+    BUNDLE.stories[story.id].manifest.variables[story.metricVar]?.default ?? 100;
+  const status = value >= 80 ? tr("Çok İyi", "Great")
+    : value >= 55 ? tr("İyi", "Good")
+    : value >= 35 ? tr("Gergin", "Tense") : tr("Kritik", "Critical");
+  const stageLabel = tr("Aşama " + stage + " / " + total, "Stage " + stage + " of " + total);
+  const bars = story.stageLabels.map((_, index) => index < stage ? "<i class=\"filled\"></i>" : "<i></i>").join("");
+  return (
+    '<header class="chathead"><div class="chatnav">' +
+    btn("home", "‹", "navback", 'aria-label="' + tr("Ana menü", "Main menu") + '"') +
+    "<h1>" + esc(loc(story.title)) + "</h1>" +
+    btn("settings", "⚙", "gear", 'aria-label="' + tr("Ayarlar", "Settings") + '"') +
+    '</div><div class="chatmeta">' +
+    '<div class="chatprogress' + (value < 30 ? ' critical' : '') + '" role="img" aria-label="' +
+    esc(stageLabel) + '">' + bars + '</div><div class="chatmetrics">' +
+    '<span class="chatstatus' + (value < 35 ? ' urgent' : '') + '" aria-label="' +
+    esc(loc(story.metricLabel) + ", " + status) + '">' + esc(status) + "</span>" +
+    (activeDelay ? '<span class="chattimer"><span class="timer-icon" aria-hidden="true"></span><span data-until="' +
+      activeDelay.until + '"></span></span>' : "") +
+    "</div></div></header>"
+  );
+}
 function chat() {
   const s = entry(active),
     run = state.runs[active],
@@ -135,20 +168,23 @@ function chat() {
     .map((e, i) => {
       if (e.kind === "message") {
         const arriving = renderedRun === run && i >= renderedCount && now - e.at < 1000;
-        return '<div class="bubble' + (arriving ? ' arriving' : '') + '">' + esc(msg(e)) + "</div>";
+        const newGroup = events[i - 1]?.kind !== "message";
+        return (newGroup ? '<div class="sender-label">' + esc(loc(s.senderName)) + '</div>' : '') +
+          '<div class="bubble' + (newGroup ? ' first-in-group' : '') + (arriving ? ' arriving' : '') + '">' +
+          esc(msg(e)) + "</div>";
       }
       if (e.kind === "system") return '<div class="tele">' + esc(msg(e)) + "</div>";
       if (e.kind === "delay")
-        return e.until > Date.now()
+        return e.until > now
           ? '<div class="tele">' +
               esc(loc(e.spec.statusBody)) +
-              ' · <span id="countdown" data-until="' +
+              ' · <span data-until="' +
               e.until +
               '"></span></div>'
           : "";
       if (e.kind === "choice")
         return (
-          '<div class="choices">' +
+          '<div class="choices' + (e.chosen != null ? ' answered' : '') + '">' +
           e.options
             .map((o, k) =>
               btn(
@@ -197,13 +233,8 @@ function chat() {
   renderedRun = run;
   renderedCount = events.length;
   return (
-    '<header class="chathead">' +
-    btn("home", "‹ " + tr("Ana menü", "Main menu"), "") +
-    "<b>" +
-    esc(loc(s.title)) +
-    "</b>" +
-    btn("settings", "⚙", "gear", 'aria-label="' + tr("Ayarlar", "Settings") + '"') +
-    '</header><section class="feed">' +
+    chatHeader(s, events, now) +
+    '<section class="feed">' +
     markup + typing +
     "</section>"
   );
@@ -212,20 +243,29 @@ function sheet() {
   if (!modal) return "";
   let inner = "";
   if (modal === "settings") {
+    const extraFonts = Object.entries(PREVIEW_FONTS)
+      .map(([id, name]) => '<option value="' + esc(id) + '">' + esc(name) + '</option>').join("");
     inner =
       "<h2>" +
       tr("Ayarlar", "Settings") +
-      "</h2><label>" +
+      '</h2><div class="setting-list"><label>' +
       tr("Dil", "Language") +
       '<select id="language"><option value="tr">Türkçe</option><option value="en">English</option></select></label><label>' +
-      tr("Yazı tipi", "Typography") +
+      tr("Mesaj yazısı", "Message font") +
       '<select id="font"><option value="serif">Serif</option><option value="mono">' +
       tr("Daktilo", "Typewriter") +
       '</option><option value="sans">' +
       tr("Geometrik", "Geometric") +
-      "</option></select></label>" +
-      btn("mute", tr("Ses", "Sound") + " · " + (state.muted ? tr("Kapalı", "Off") : tr("Açık", "On")), "alt");
-    if (!state.paid) inner += btn("paywall", tr("Tam Erişim", "All Access"), "alt");
+      "</option>" + extraFonts + '</select></label><p class="reply-sample message-sample">' +
+      tr("Merhaba, mesajım ulaştı mı?", "Hello, did my message reach you?") + "</p>" +
+      '<label>' + tr("Cevap yazısı", "Reply font") +
+      '<select id="replyFont"><option value="serif">Serif</option><option value="sans">' +
+      tr("Sade", "Sans serif") + '</option><option value="mono">' +
+      tr("Eş aralıklı", "Monospaced") + '</option>' + extraFonts + '</select></label><p class="reply-sample">' +
+      tr("Biraz bekle, buradayım.", "Give it a moment. I'm here.") + '</p>' +
+      '<button class="sound-toggle" data-action="mute" role="switch" aria-checked="' + !state.muted + '">' +
+      tr("Ses efektleri", "Sound effects") + '<i aria-hidden="true"></i></button></div>';
+    if (!state.paid) inner += btn("paywall", tr("Tam Erişim", "All Access"), "access-link");
   } else if (modal === "purchase") {
     inner =
       "<h2>" +
@@ -250,20 +290,38 @@ function sheet() {
       btn("reward", tr("Reklamı tamamla", "Complete ad"));
   }
   return (
-    '<div class="overlay"><section class="sheet" role="dialog" aria-modal="true">' +
+    '<div class="overlay"><section class="sheet' + (modal === "settings" ? " preferences" : "") +
+    '" role="dialog" aria-modal="true" aria-label="' + (modal === "settings" ? tr("Ayarlar", "Settings") :
+      modal === "purchase" ? tr("Tam Erişim", "All Access") : tr("Örnek ödüllü reklam", "Sample rewarded ad")) + '">' +
     inner +
     btn("close", tr("Kapat", "Close"), "alt") +
     "</section></div>"
   );
 }
 function render() {
-  const previous = $("screen").querySelector(".feed");
+  const screen = $("screen");
+  const previous = screen.querySelector(".feed");
   const stick = !previous || previous.scrollHeight - previous.scrollTop - previous.clientHeight < 65;
   const pos = previous?.scrollTop ?? 0;
+  const focused = document.activeElement;
+  const action = focused?.dataset.action;
+  const focusedSelector = focused?.id ? "#" + CSS.escape(focused.id) : action
+    ? '[data-action="' + action + '"]' + (focused.dataset.id ? '[data-id="' + focused.dataset.id + '"]' : "")
+    : null;
+  if (modal && !renderedModal) restoreFocus = focusedSelector;
+
   document.documentElement.lang = state.lang;
-  $("phone").className =
+  const phone = $("phone");
+  phone.className =
     "phone " + state.font + (active ? " chat " + (entry(active).theme === "ice_blue" ? "icechat" : "") : "");
-  $("screen").innerHTML = active ? chat() : home();
+  phone.dataset.replyFont = state.replyFont;
+  const messageFamily = Object.hasOwn(PREVIEW_FONTS, state.font) ? PREVIEW_FONTS[state.font] : "";
+  const replyFamily = Object.hasOwn(PREVIEW_FONTS, state.replyFont) ? PREVIEW_FONTS[state.replyFont] : "";
+  phone.style.setProperty("--message-family", messageFamily ? '"' + messageFamily + '", serif' : "");
+  phone.style.setProperty("--reply-family", replyFamily ? '"' + replyFamily + '", sans-serif' : "");
+  phone.style.setProperty("--reply-weight", replyFamily ? "400" : "");
+  screen.innerHTML = active ? chat() : home();
+  screen.inert = Boolean(modal);
   if (!active) {
     renderedRun = null;
     renderedCount = 0;
@@ -272,6 +330,7 @@ function render() {
   if ($("language")) {
     $("language").value = state.lang;
     $("font").value = state.font;
+    $("replyFont").value = state.replyFont;
   }
   const feed = $("screen").querySelector(".feed");
   if (feed) feed.scrollTop = stick ? feed.scrollHeight : pos;
@@ -324,6 +383,24 @@ function render() {
     $("screen").querySelector(".inbox").innerHTML = cards.join("");
   }
   updateCounter();
+  updateWallpaper();
+  if (modal) {
+    const dialog = $("modal");
+    const target = modal === renderedModal && focusedSelector ? dialog.querySelector(focusedSelector) : null;
+    (target ?? dialog.querySelector('[data-action="close"]'))?.focus({ preventScroll: true });
+  } else if (renderedModal) {
+    const target = restoreFocus ? screen.querySelector(restoreFocus) : null;
+    (target ?? (active ? screen.querySelector(".navback") : null))?.focus({ preventScroll: true });
+    restoreFocus = null;
+  } else if (active !== renderedLine) {
+    const target = active ? screen.querySelector(".navback") : screen.querySelector('.row[data-id="' + renderedLine + '"]');
+    target?.focus({ preventScroll: true });
+  } else if (focusedSelector && screen.contains(focused) === false && focused !== document.body) {
+    const target = screen.querySelector(focusedSelector);
+    if (target && action !== "answer") target.focus({ preventScroll: true });
+  }
+  renderedModal = modal;
+  renderedLine = active;
   lastStamp = stamp();
 }
 function stamp() {
@@ -338,10 +415,14 @@ function stamp() {
   ].join("/");
 }
 function updateCounter() {
-  const c = $("countdown");
-  if (c) {
-    const t = Math.max(0, Math.ceil((Number(c.dataset.until) - Date.now()) / 1000));
-    c.textContent = Math.floor(t / 60) + ":" + String(t % 60).padStart(2, "0");
+  const now = Date.now();
+  for (const counter of $("screen").querySelectorAll("[data-until]")) {
+    const seconds = Math.max(0, Math.ceil((Number(counter.dataset.until) - now) / 1000));
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor(seconds / 60) % 60;
+    const remainder = String(seconds % 60).padStart(2, "0");
+    const time = hours ? hours + ":" + String(minutes).padStart(2, "0") + ":" + remainder : minutes + ":" + remainder;
+    if (counter.textContent !== time) counter.textContent = time;
   }
 }
 function grant(run, action, now) {
@@ -360,7 +441,7 @@ function collectEndings(now) {
 }
 function setScene(value) {
   scene = value;
-  state = value === "play" ? readSave() : { ...blank(), lang: state.lang };
+  state = value === "play" ? readSave() : { ...blank(), lang: state.lang, replyFont: state.replyFont };
   active = null;
   modal = null;
   ad = null;
@@ -395,9 +476,24 @@ function setScene(value) {
   render();
 }
 $("scenes").addEventListener("change", (e) => setScene(e.target.value));
+document.addEventListener("keydown", (event) => {
+  if (!modal) return;
+  if (event.key === "Escape") {
+    event.preventDefault();
+    $("modal").querySelector('[data-action="close"]').click();
+  }
+  if (event.key !== "Tab") return;
+  const controls = Array.from($("modal").querySelectorAll("button:enabled, select:enabled"));
+  const index = controls.indexOf(document.activeElement);
+  if (event.shiftKey ? index <= 0 : index === -1 || index === controls.length - 1) {
+    event.preventDefault();
+    controls[event.shiftKey ? controls.length - 1 : 0]?.focus();
+  }
+});
 document.addEventListener("change", (e) => {
   if (e.target.id === "language") state.lang = e.target.value;
   else if (e.target.id === "font") state.font = e.target.value;
+  else if (e.target.id === "replyFont") state.replyFont = e.target.value;
   else return;
   save();
   render();
@@ -466,6 +562,7 @@ document.addEventListener("click", (event) => {
 });
 function refresh() {
   const now = Date.now();
+  if (modal && !active) updateWallpaper(new Date(now));
   collectEndings(now);
   if (state.paid)
     for (const run of Object.values(state.runs)) {
@@ -480,6 +577,7 @@ function refresh() {
     render();
   } else updateCounter();
 }
+initializeWallpaper();
 setScene("play");
 setInterval(refresh, 500);
 document.addEventListener("visibilitychange", () => {

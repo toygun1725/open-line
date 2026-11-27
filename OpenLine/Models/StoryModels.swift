@@ -54,10 +54,35 @@ enum AppLanguage: String, Codable, CaseIterable, Identifiable {
     var shortCode: String { rawValue.uppercased() }
 }
 
+enum AdditionalGameFont: String {
+    case atkinson, lora, manrope, plexMono
+
+    var title: String {
+        switch self {
+        case .atkinson: return "Atkinson Hyperlegible Next"
+        case .lora: return "Lora"
+        case .manrope: return "Manrope"
+        case .plexMono: return "IBM Plex Mono"
+        }
+    }
+
+    var postScriptName: String {
+        switch self {
+        case .atkinson: return "AtkinsonHyperlegibleNext-Regular"
+        case .lora: return "Lora-Regular"
+        case .manrope: return "Manrope-Regular"
+        case .plexMono: return "IBMPlexMono-Regular"
+        }
+    }
+}
+
 enum AppFontStyle: String, Codable, CaseIterable, Identifiable {
     case editorial
     case typewriter
     case geometric
+    case atkinson, lora, manrope, plexMono
+
+    var additionalFont: AdditionalGameFont? { AdditionalGameFont(rawValue: rawValue) }
 
     var id: String { rawValue }
 
@@ -69,6 +94,27 @@ enum AppFontStyle: String, Codable, CaseIterable, Identifiable {
         case (.typewriter, .en): return "Typewriter Record"
         case (.geometric, .tr): return "Teknik Geometrik"
         case (.geometric, .en): return "Technical Geometric"
+        default: return additionalFont?.title ?? rawValue
+        }
+    }
+}
+
+enum ReplyFontStyle: String, Codable, CaseIterable, Identifiable {
+    case serif
+    case sans
+    case mono
+    case atkinson, lora, manrope, plexMono
+
+    var additionalFont: AdditionalGameFont? { AdditionalGameFont(rawValue: rawValue) }
+
+    var id: String { rawValue }
+
+    func title(for language: AppLanguage) -> String {
+        switch self {
+        case .serif: return "Serif"
+        case .sans: return language == .tr ? "Sade" : "Sans serif"
+        case .mono: return language == .tr ? "Eş aralıklı" : "Monospaced"
+        default: return additionalFont?.title ?? rawValue
         }
     }
 }

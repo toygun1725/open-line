@@ -3,8 +3,8 @@ import SwiftUI
 struct ChronoWindowView: View {
     let palette: StoryPalette
     let language: AppLanguage
-    let fontStyle: AppFontStyle
-    let storyBadge: String
+    let storyTitle: String
+    let metricLabel: String
     let currentStage: Int
     let integrityPercent: Int
     let activeDelay: ScheduledEvent?
@@ -12,7 +12,7 @@ struct ChronoWindowView: View {
     let onTapSettings: () -> Void
 
     private var accentColor: Color {
-        integrityPercent < 30 ? palette.criticalCrimson : palette.accent
+        integrityPercent < 35 ? Color(red: 1, green: 0.69, blue: 0.66) : palette.windowSignal
     }
 
     private var statusWord: String {
@@ -28,106 +28,105 @@ struct ChronoWindowView: View {
         }
     }
 
+    private var stageProgress: some View {
+        HStack(spacing: 4) {
+            ForEach(1...4, id: \.self) { step in
+                Capsule()
+                    .fill(step <= currentStage ? accentColor : Color.white.opacity(0.24))
+                    .frame(height: 4)
+            }
+        }
+        .frame(minWidth: 64)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(language == .tr ? "Aşama \(currentStage) / 4" : "Stage \(currentStage) of 4")
+    }
+
+    private var status: some View {
+        Text(statusWord)
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(accentColor)
+            .padding(.horizontal, 9)
+            .padding(.vertical, 4)
+            .overlay(Capsule().strokeBorder(palette.windowBorder))
+            .accessibilityLabel("\(metricLabel), \(statusWord)")
+    }
+
+    @ViewBuilder
+    private var countdown: some View {
+        if let activeDelay,
+           case .delayStart(_, let startDate, let endDate) = activeDelay.kind,
+           startDate <= endDate {
+            Label {
+                Text(timerInterval: startDate...endDate, countsDown: true)
+                    .monospacedDigit()
+            } icon: {
+                Image(systemName: "clock")
+                    .accessibilityHidden(true)
+            }
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(.white)
+            .fixedSize(horizontal: true, vertical: false)
+        }
+    }
+
+    private func navigationButton(_ title: String, icon: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: icon)
+                .font(.body.weight(.semibold))
+                .foregroundStyle(.white)
+                .frame(width: 32, height: 32)
+                .background(Color.white.opacity(0.09), in: Circle())
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(title)
+    }
+
     var body: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 10) {
-                HStack(spacing: 8) {
-                    // The current line is identified beside the return action.
+        VStack(spacing: 6) {
+            HStack(spacing: 4) {
+                navigationButton(language == .tr ? "Ana menü" : "Main menu", icon: "chevron.left", action: onHome)
+                Text(storyTitle)
+                    .font(.system(.title3, design: .serif))
+                    .foregroundStyle(.white)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityAddTraits(.isHeader)
+                navigationButton(language == .tr ? "Ayarlar" : "Settings", icon: "gearshape", action: onTapSettings)
+            }
 
-                    Button(action: onHome) {
-                        Label(language == .tr ? "Ana menü" : "Main menu", systemImage: "chevron.left")
-                            .font(.subheadline.weight(.semibold))
-                            .frame(minHeight: 44)
-                    }
-                    .foregroundStyle(palette.inkPrimary)
-                    Text(storyBadge).font(AppTypography.telemetry(size: 12))
-                        .foregroundStyle(palette.inkPrimary).lineLimit(1).minimumScaleFactor(0.8)
+            Rectangle().fill(palette.windowBorder).frame(height: 1)
 
-                    HStack(spacing: 4) {
-                        ForEach(1...4, id: \.self) { step in
-                            RoundedRectangle(cornerRadius: 1)
-                                .fill(step <= currentStage ? accentColor : palette.prismInactive)
-                                .frame(width: 14, height: 4)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 10) {
+                    stageProgress
+                    status.fixedSize(horizontal: true, vertical: false)
+                    countdown
+                }
+
+                VStack(spacing: 8) {
+                    stageProgress
+                    ViewThatFits(in: .horizontal) {
+                        HStack(spacing: 10) {
+                            status.fixedSize(horizontal: true, vertical: false)
+                            countdown
+                        }
+                        VStack(spacing: 6) {
+                            status
+                            countdown
                         }
                     }
-                    .accessibilityLabel(
-                        language == .tr
-                            ? "Aşama \(currentStage) / 4"
-                            : "Stage \(currentStage) of 4"
-                    )
-                }
-
-                Spacer(minLength: 8)
-
-                HStack(spacing: 6) {
-                    if let activeDelay,
-                       case .delayStart(_, _, let endDate) = activeDelay.kind {
-                        Text(endDate, style: .timer)
-                            .font(AppTypography.telemetry(size: 12).weight(.semibold))
-                            .foregroundStyle(palette.inkPrimary)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(
-                                RoundedRectangle(cornerRadius: 5)
-                                    .fill(palette.keyWhiteBottom)
-                            )
-                    }
-
-                    Text(statusWord)
-                        .font(AppTypography.telemetry(size: 12).weight(.semibold))
-                        .foregroundStyle(accentColor)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 3)
-                        .background(
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(palette.plateTop)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 5)
-                                        .stroke(integrityPercent < 30 ? palette.criticalCrimson : palette.windowBorder, lineWidth: 1)
-                                )
-                        )
-
-                    Button(action: onTapSettings) {
-                        Text(language == .tr ? "Ayarlar" : "Setup")
-                            .font(AppTypography.control(style: fontStyle, size: 12, weight: .semibold))
-                            .foregroundStyle(palette.inkPrimary)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
-                            .background(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [palette.keyWhiteTop, palette.keyWhiteBottom],
-                                            startPoint: .top,
-                                            endPoint: .bottom
-                                        )
-                                    )
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 6)
-                                            .stroke(palette.keyWhiteBorder, lineWidth: 1)
-                                    )
-                                    .shadow(color: palette.keyStoneSkirt.opacity(0.65), radius: 0, x: 0, y: 1.5)
-                            )
-                    }
-                    .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 9)
-
-            // Machined Vernier ruler ticks
-            Canvas { context, size in
-                var x: CGFloat = 0
-                while x < size.width {
-                    let rect = CGRect(x: x, y: 0, width: 1, height: size.height)
-                    context.fill(Path(rect), with: .color(palette.inkPrimary.opacity(0.22)))
-                    x += 8
-                }
-            }
-            .frame(height: 4)
+            .padding(.horizontal, 8)
         }
+        .padding(.horizontal, 8)
+        .padding(.top, 3)
+        .padding(.bottom, 10)
         .background(
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: 15)
                 .fill(
                     LinearGradient(
                         colors: [palette.windowTop, palette.windowBottom],
@@ -136,10 +135,11 @@ struct ChronoWindowView: View {
                     )
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(palette.windowBorder, lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 15)
+                        .strokeBorder(palette.windowBorder, lineWidth: 1)
                 )
         )
+        .shadow(color: .black.opacity(0.19), radius: 8, y: 4)
     }
 }
 

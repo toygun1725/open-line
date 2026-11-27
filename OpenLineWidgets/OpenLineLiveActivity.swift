@@ -17,27 +17,27 @@ private struct WidgetStoryPalette {
         switch themeID {
         case "warm_rose":
             return WidgetStoryPalette(
-                platterTint: Color(red: 1.000, green: 0.969, blue: 0.973), // #FFF7F8
-                ink: Color(red: 0.137, green: 0.067, blue: 0.086),         // #231116
-                mutedInk: Color(red: 0.388, green: 0.267, blue: 0.298),    // #63444C
-                accent: Color(red: 0.722, green: 0.200, blue: 0.322),      // #B83352
-                pillBg: Color(red: 0.980, green: 0.867, blue: 0.890),      // #FADDE3
-                track: Color(red: 0.910, green: 0.835, blue: 0.855),       // #E8D5DA
-                porcelain: Color(red: 1.000, green: 0.984, blue: 0.988),
+                platterTint: Color(red: 0.220, green: 0.125, blue: 0.184), // #38202F
+                ink: Color(red: 1.000, green: 0.973, blue: 0.957),         // #FFF8F4
+                mutedInk: Color(red: 0.890, green: 0.804, blue: 0.824),    // #E3CDD2
+                accent: Color(red: 0.941, green: 0.706, blue: 0.733),      // #F0B4BB
+                pillBg: Color(red: 0.329, green: 0.208, blue: 0.275),      // #543546
+                track: Color(red: 0.408, green: 0.298, blue: 0.353),       // #684C5A
+                porcelain: Color(red: 1.000, green: 0.973, blue: 0.957),
                 diAccent: Color(red: 0.992, green: 0.643, blue: 0.686),    // #FDA4AF
-                critCrimson: Color(red: 0.722, green: 0.180, blue: 0.165)
+                critCrimson: Color(red: 1.000, green: 0.690, blue: 0.659)
             )
         default: // "ice_blue"
             return WidgetStoryPalette(
-                platterTint: Color(red: 0.941, green: 0.973, blue: 0.996), // #F0F8FE
-                ink: Color(red: 0.059, green: 0.110, blue: 0.165),         // #0F1C2A
-                mutedInk: Color(red: 0.243, green: 0.329, blue: 0.412),    // #3E5469
-                accent: Color(red: 0.082, green: 0.369, blue: 0.584),      // #155E95
-                pillBg: Color(red: 0.863, green: 0.925, blue: 0.984),      // #DCECFB
-                track: Color(red: 0.812, green: 0.863, blue: 0.910),       // #CFDCE8
+                platterTint: Color(red: 0.086, green: 0.169, blue: 0.239), // #162B3D
+                ink: Color(red: 0.969, green: 0.988, blue: 1.000),
+                mutedInk: Color(red: 0.765, green: 0.843, blue: 0.902),    // #C3D7E6
+                accent: Color(red: 0.608, green: 0.796, blue: 0.906),      // #9BCBE7
+                pillBg: Color(red: 0.165, green: 0.282, blue: 0.373),      // #2A485F
+                track: Color(red: 0.247, green: 0.361, blue: 0.451),       // #3F5C73
                 porcelain: Color(red: 0.969, green: 0.984, blue: 1.000),
                 diAccent: Color(red: 0.490, green: 0.827, blue: 0.988),    // #7DD3FC
-                critCrimson: Color(red: 0.722, green: 0.180, blue: 0.165)
+                critCrimson: Color(red: 1.000, green: 0.690, blue: 0.659)
             )
         }
     }
@@ -155,13 +155,15 @@ private struct LockScreenLiveActivityView: View {
                 Group {
                     if isStale {
                         Text(state.readyTitle)
-                            .foregroundStyle(palette.porcelain)
+                            .foregroundStyle(palette.platterTint)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 4)
                             .background(Capsule().fill(activeTint))
                     } else {
                         Text(timerInterval: state.startDate...state.endDate, countsDown: true)
                             .foregroundStyle(activeTint)
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: 82)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 4)
                             .background(Capsule().fill(palette.pillBg))
@@ -174,7 +176,7 @@ private struct LockScreenLiveActivityView: View {
                 Text(isStale ? state.readyTitle : state.statusBody)
                     .font(.headline.weight(.semibold))
                     .foregroundStyle(palette.ink)
-                    .lineLimit(1)
+                    .lineLimit(2)
 
                 Text("\(state.metricLabel): \(statusWord) · \(state.shortTitle)")
                     .font(.caption)
@@ -199,7 +201,7 @@ private struct LockScreenLiveActivityView: View {
                         let step = idx + 1
                         Text(label)
                             .font(.caption2.weight(step == state.currentStage ? .semibold : .regular))
-                            .foregroundStyle(step <= state.currentStage ? palette.ink : palette.mutedInk.opacity(0.75))
+                            .foregroundStyle(step <= state.currentStage ? palette.ink : palette.mutedInk)
                             .frame(maxWidth: .infinity)
                             .lineLimit(1)
                     }

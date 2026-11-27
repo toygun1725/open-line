@@ -49,6 +49,9 @@ targets:
       - path: OpenLine/Resources/Story
         type: folder
         buildPhase: resources
+      - path: assets/wallpapers
+        type: folder
+        buildPhase: resources
       - path: Shared
     dependencies:
       - package: GoogleMobileAds
@@ -77,6 +80,10 @@ targets:
           - SpaceGrotesk-Variable.ttf
           - CourierPrime-Regular.ttf
           - CourierPrime-Bold.ttf
+          - AtkinsonHyperlegibleNext-Variable.ttf
+          - Lora-Variable.ttf
+          - Manrope-Regular.ttf
+          - IBMPlexMono-Regular.ttf
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID)

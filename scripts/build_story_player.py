@@ -16,8 +16,18 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 STORY_DIR = ROOT / "OpenLine" / "Resources" / "Story"
+FONT_DIR = ROOT / "OpenLine" / "Resources" / "Fonts"
 TEMPLATE_PATH = ROOT / "scripts" / "story_player_template.html"
 WORKSPACE_OUT = ROOT / "tools" / "story_player.html"
+
+FONTS = {
+    "atkinson": ("Atkinson Hyperlegible Next", "AtkinsonHyperlegibleNext-Variable.ttf"),
+    "lora": ("Lora", "Lora-Variable.ttf"),
+    "manrope": ("Manrope", "Manrope-Regular.ttf"),
+    "plexMono": ("IBM Plex Mono", "IBMPlexMono-Regular.ttf"),
+}
+
+
 def load_story_bundle() -> dict:
     with (STORY_DIR / "catalog.json").open("r", encoding="utf-8") as f:
         catalog = json.load(f)
@@ -85,18 +95,34 @@ def main() -> int:
     switch_b64 = json.dumps(wav_to_compact_b64(ROOT / "assets" / "free" / "audio" / "switch2.wav"))
 
     html = TEMPLATE_PATH.read_text(encoding="utf-8")
-    wallpaper = ROOT / "OpenLine/Resources/Assets.xcassets/NightCity.imageset/night-city.jpg"
+    font_css = []
+    for family, filename in FONTS.values():
+        encoded = base64.b64encode((FONT_DIR / filename).read_bytes()).decode("ascii")
+        font_css.append(
+            f'@font-face {{ font-family: "{family}"; font-weight: 400; '
+            f'src: url("data:font/ttf;base64,{encoded}") format("truetype"); }}'
+        )
+    wallpapers = [
+        "data:image/webp;base64," + base64.b64encode(
+            (ROOT / "assets" / "wallpapers" / f"{hour:02d}.webp").read_bytes()
+        ).decode("ascii")
+        for hour in range(24)
+    ]
     html = html.replace("/*__PREVIEW_STORY__*/", (ROOT / "scripts/preview_story.js").read_text(encoding="utf-8"))
     html = html.replace("/*__PREVIEW_UI__*/", (ROOT / "scripts/preview_ui.js").read_text(encoding="utf-8"))
-    html = html.replace("__NIGHT_CITY__", base64.b64encode(wallpaper.read_bytes()).decode("ascii"))
+    html = html.replace("/*__PREVIEW_WALLPAPER__*/", (ROOT / "scripts/preview_wallpaper.js").read_text(encoding="utf-8"))
+    html = html.replace("/*__PREVIEW_WALLPAPER_CSS__*/", (ROOT / "scripts/preview_wallpaper.css").read_text(encoding="utf-8"))
+    html = html.replace("/*__PREVIEW_FONTS_CSS__*/", "\n".join(font_css), 1)
+    html = html.replace("/*__PREVIEW_FONTS__*/{}", json.dumps({key: value[0] for key, value in FONTS.items()}), 1)
+    html = html.replace("/*__WALLPAPERS__*/[]", json.dumps(wallpapers, separators=(",", ":")), 1)
     html = html.replace("/*__STORY_BUNDLE_JSON__*/null", bundle_json, 1)
     html = html.replace('/*__CLICK_B64__*/""', click_b64, 1)
     html = html.replace('/*__SWITCH_B64__*/""', switch_b64, 1)
 
     WORKSPACE_OUT.parent.mkdir(parents=True, exist_ok=True)
-    WORKSPACE_OUT.write_text(html, encoding="utf-8")
+    WORKSPACE_OUT.write_text(html, encoding="utf-8", newline="\n")
     total_nodes = sum(len(s["nodes"]) for s in bundle["stories"].values())
-    print(f"Wrote {WORKSPACE_OUT} ({len(html)} bytes, {len(bundle['stories'])} stories, {total_nodes} nodes)")
+    print(f"Wrote {WORKSPACE_OUT} ({len(html.encode('utf-8'))} bytes, {len(bundle['stories'])} stories, {total_nodes} nodes)")
 
     return 0
 

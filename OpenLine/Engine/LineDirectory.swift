@@ -14,6 +14,7 @@ final class PlayerProfile {
     private let store: SaveStore
     var language: AppLanguage { didSet { persist() } }
     var fontStyle: AppFontStyle { didSet { persist() } }
+    var replyFontStyle: ReplyFontStyle { didSet { persist() } }
     var isMuted: Bool { didSet { sound?.isMuted = isMuted; persist() } }
     private(set) var isAllAccessUnlocked: Bool
     var showPaywallSheet = false
@@ -29,6 +30,7 @@ final class PlayerProfile {
         let saved = store.loadPreferences()
         language = saved?.language ?? (Locale.current.language.languageCode?.identifier == "en" ? .en : .tr)
         fontStyle = saved?.fontStyle ?? .editorial
+        replyFontStyle = saved?.replyFontStyle ?? .serif
         isMuted = saved?.isMuted ?? false
         isAllAccessUnlocked = saved?.isAllAccessUnlocked ?? false
         sound?.isMuted = isMuted
@@ -42,7 +44,7 @@ final class PlayerProfile {
 
     private func persist() {
         store.savePreferences(AppPreferences(activeStoryID: catalog.defaultStoryId, language: language,
-            fontStyle: fontStyle, isMuted: isMuted, isAllAccessUnlocked: isAllAccessUnlocked))
+            fontStyle: fontStyle, replyFontStyle: replyFontStyle, isMuted: isMuted, isAllAccessUnlocked: isAllAccessUnlocked))
     }
 }
 

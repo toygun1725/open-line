@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct LedgerPlateView: View {
+    @ScaledMetric(relativeTo: .body) private var textSize: CGFloat = 16
     let text: String
     let fontStyle: AppFontStyle
     let palette: StoryPalette
@@ -14,10 +15,10 @@ struct LedgerPlateView: View {
         Group {
             if shouldErode {
                 Text(erodedAttributedString)
-                    .font(AppTypography.narrative(style: fontStyle, size: 15, medium: isActiveNewest))
+                    .font(AppTypography.narrative(style: fontStyle, size: textSize, medium: isActiveNewest))
             } else {
                 Text(text)
-                    .font(AppTypography.narrative(style: fontStyle, size: 15, medium: isActiveNewest))
+                    .font(AppTypography.narrative(style: fontStyle, size: textSize, medium: isActiveNewest))
                     .foregroundStyle(isActiveNewest ? palette.inkPrimary : palette.inkHistory)
             }
         }
@@ -26,7 +27,8 @@ struct LedgerPlateView: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
         .background(
-            RoundedRectangle(cornerRadius: 8)
+            UnevenRoundedRectangle(topLeadingRadius: 5, bottomLeadingRadius: 5,
+                                   bottomTrailingRadius: 14, topTrailingRadius: 14)
                 .fill(
                     LinearGradient(
                         colors: [palette.plateTop, palette.plateBottom],
@@ -35,15 +37,16 @@ struct LedgerPlateView: View {
                     )
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(
+                    UnevenRoundedRectangle(topLeadingRadius: 5, bottomLeadingRadius: 5,
+                                           bottomTrailingRadius: 14, topTrailingRadius: 14)
+                        .strokeBorder(
                             isActiveNewest
-                                ? (integrity < 30 ? palette.criticalCrimson : palette.plateActiveBorder)
+                                ? (integrity < 30 ? palette.criticalCrimson : palette.plateBorder)
                                 : palette.plateBorder,
                             lineWidth: 1
                         )
                 )
-                .shadow(color: Color.black.opacity(isActiveNewest ? 0.10 : 0.05), radius: 4, x: 0, y: 2)
+                .shadow(color: Color.black.opacity(0.05), radius: 2, y: 2)
         )
     }
 

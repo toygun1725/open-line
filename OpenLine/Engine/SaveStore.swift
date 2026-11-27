@@ -4,6 +4,7 @@ struct AppPreferences: Codable {
     var activeStoryID: String
     var language: AppLanguage
     var fontStyle: AppFontStyle
+    var replyFontStyle: ReplyFontStyle?
     var isMuted: Bool
     var isAllAccessUnlocked: Bool?
 }
